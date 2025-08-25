@@ -1,0 +1,44 @@
+.web-app-project {
+  background-color: #e5e8da;
+  margin-bottom: 30px;
+  border-radius: 20px;
+  border: 1px solid black;
+}
+
+.web-app-project__intro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.web-app-project__title {
+  color: #1d2b38;
+}
+
+.web-app-project__arrow {
+  width: 40px;
+  height: 40px;
+  color: #1d2b38;
+}
+
+.web-app-project__details {
+  height: 0;
+  overflow: hidden;
+}
+
+.web-app-project__button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: rotate 0.2s ease-in-out;
+}
+
+.web-app-project__button:active {
+  transform: scale(0.95);
+}
+
+.web-app-project__button_pressed {
+  rotate: 90deg;
+  transition: rotate 0.2s ease-in-out;
+}
