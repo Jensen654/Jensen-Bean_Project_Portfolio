@@ -1,20 +1,27 @@
+import "../blocks/ContactMe.css";
+
 const ContactMe = () => {
   return (
     <div className="contact-me">
-      <h1>Contact Me</h1>
-      <p>
+      <h1 className="contact-me__title">Contact Me</h1>
+      <p className="contact-me__description">
         If you have any questions or would like to get in touch, please reach
         out!
       </p>
-      <form>
-        <label htmlFor="name">Name:</label>
-        <input type="text" id="name" name="name" required />
+      <form className="contact-me__form">
+        <label className="contact-me__label" htmlFor="name">
+          Name:
+          <input type="text" id="name" name="name" required />
+        </label>
+        <label className="contact-me__label" htmlFor="email">
+          Email:
+          <input type="email" id="email" name="email" required />
+        </label>
 
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" required />
-
-        <label htmlFor="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
+        <label className="contact-me__label" htmlFor="message">
+          Message:
+          <textarea id="message" name="message" required></textarea>
+        </label>
 
         <button type="submit">Send</button>
       </form>

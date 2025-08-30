@@ -74,7 +74,7 @@
 .home__about {
   display: flex;
   padding: 100px 30px;
-  justify-content: space-around;
+  justify-content: space-evenly;
   gap: 20px;
 }
 

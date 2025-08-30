@@ -15,9 +15,7 @@ import OtherProjects from "./OtherProjects";
 function App() {
   const [activeRoute, setActiveRoute] = useState("");
   const [activeSubRoute, setActiveSubRoute] = useState("");
-  const [buttonPressed, setButtonPressed] = useState([
-    { id: "", isPressed: false },
-  ]);
+  const [buttonPressed, setButtonPressed] = useState({});
 
   return (
     <PageDataContext.Provider
