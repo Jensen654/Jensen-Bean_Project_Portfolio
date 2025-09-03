@@ -1,0 +1,50 @@
+const BASE_URL = "http://localhost:3001";
+
+const handleResponse = (res) => {
+  if (res.ok) {
+    return res.json();
+  } else {
+    return Promise.reject(`Error: ${res.status}`);
+  }
+};
+
+const getProjects = () => {
+  return fetch(`${BASE_URL}/projects`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => handleResponse(res));
+};
+
+const confirmUser = (token) => {
+  return fetch(`${BASE_URL}/users/confirm`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => handleResponse(res));
+};
+
+const loginUser = (email, password) => {
+  return fetch(`${BASE_URL}/users/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  }).then((res) => handleResponse(res));
+};
+
+const signUpUser = (name, email, password) => {
+  return fetch(`${BASE_URL}/users/signup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name, email, password }),
+  }).then((res) => handleResponse(res));
+};
+
+export { getProjects, confirmUser, loginUser, signUpUser };

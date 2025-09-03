@@ -28,7 +28,7 @@ const ProjectDisplay = ({
   const handleDropDownClick = () => {
     setButtonPressed((prev) => ({
       ...prev,
-      [project.id]: !prev[project.id],
+      [project._id]: !prev[project._id],
     }));
   };
 
@@ -38,7 +38,7 @@ const ProjectDisplay = ({
         <h2 className="project-display__title">{projectTitle}</h2>
         <button
           className={`project-display__button ${
-            buttonPressed[project.id] ? "project-display__button_pressed" : ""
+            buttonPressed[project._id] ? "project-display__button_pressed" : ""
           }`}
         >
           <svg
@@ -59,7 +59,7 @@ const ProjectDisplay = ({
       </div>
       <div
         className={`project-display__details ${
-          buttonPressed[project.id] ? "project-display__details_open" : ""
+          buttonPressed[project._id] ? "project-display__details_open" : ""
         }`}
       >
         <p className="project-display__description">{projectDescription}</p>

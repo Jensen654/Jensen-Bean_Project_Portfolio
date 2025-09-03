@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 import "../blocks/App.css";
@@ -8,39 +8,99 @@ import Home from "./Home.jsx";
 import Projects from "./Projects.jsx";
 import ContactMe from "./ContactMe.jsx";
 import PageDataContext from "../contexts/PageDataContext.js";
+import ProjectDataContext from "../contexts/ProjectDataContext.js";
+import UserDataContext from "../contexts/UserDataContext.js";
 import Footer from "./Footer.jsx";
 import WebApplications from "./WebApplications";
 import OtherProjects from "./OtherProjects";
+import {
+  getProjects,
+  confirmUser,
+  signUpUser,
+  loginUser,
+} from "../utils/api.js";
+import SignUpModal from "./SignUpModal.jsx";
 
 function App() {
   const [activeRoute, setActiveRoute] = useState("");
   const [activeSubRoute, setActiveSubRoute] = useState("");
   const [buttonPressed, setButtonPressed] = useState({});
+  const [projects, setProjects] = useState([]);
+  const [activeModal, setActiveModal] = useState("");
+  const [currentUser, setCurrentUser] = useState({ name: "" });
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    confirmUser(token);
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const projects = await getProjects();
+      setProjects(projects);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const handleCloseModal = () => {
+    setActiveModal("");
+  };
+
+  const handleSignUp = (name, email, password) => {
+    setCurrentUser({ name });
+    signUpUser(name, email, password)
+      .then((token) => {
+        localStorage.setItem("jwt", token);
+        handleCloseModal();
+      })
+      .catch((err) => {
+        localStorage.removeItem("jwt");
+        console.error(err);
+        setCurrentUser({ name: "" });
+      });
+  };
 
   return (
-    <PageDataContext.Provider
-      value={{
-        activeRoute,
-        setActiveRoute,
-        activeSubRoute,
-        setActiveSubRoute,
-        buttonPressed,
-        setButtonPressed,
-      }}
-    >
-      <div className="page">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="projects" element={<Projects />}>
-            <Route path="web-applications" element={<WebApplications />} />
-            <Route path="other-projects" element={<OtherProjects />} />
-          </Route>
-          <Route path="contactMe" element={<ContactMe />} />
-        </Routes>
-      </div>
-      <Footer />
-    </PageDataContext.Provider>
+    <UserDataContext.Provider value={{ currentUser }}>
+      <ProjectDataContext.Provider value={{ projects }}>
+        <PageDataContext.Provider
+          value={{
+            activeRoute,
+            setActiveRoute,
+            activeSubRoute,
+            setActiveSubRoute,
+            buttonPressed,
+            setButtonPressed,
+            activeModal,
+            setActiveModal,
+          }}
+        >
+          <div className="page">
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="projects" element={<Projects />}>
+                <Route path="web-applications" element={<WebApplications />} />
+                <Route path="other-projects" element={<OtherProjects />} />
+              </Route>
+              <Route path="contactMe" element={<ContactMe />} />
+            </Routes>
+          </div>
+          <Footer />
+          {activeModal === "signUp" && (
+            <SignUpModal
+              handleCloseModal={handleCloseModal}
+              handleSubmit={handleSignUp}
+            />
+          )}
+        </PageDataContext.Provider>
+      </ProjectDataContext.Provider>
+    </UserDataContext.Provider>
   );
 }
 

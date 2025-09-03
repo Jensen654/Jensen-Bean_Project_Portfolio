@@ -27,6 +27,7 @@
   color: #def3ef;
   font-size: 2rem;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .header__link:hover {
@@ -40,4 +41,9 @@
 
 .header__link-text {
   margin: 0;
+}
+
+.header__signup-button {
+  background-color: transparent;
+  border: none;
 }

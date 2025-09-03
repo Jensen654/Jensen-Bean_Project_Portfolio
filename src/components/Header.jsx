@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import "../blocks/Header.css";
 import PageDataContext from "../contexts/PageDataContext.js";
+import UserDataContext from "../contexts/UserDataContext.js";
 import { useContext } from "react";
 
 const Header = () => {
-  const { activeRoute, setActiveRoute, setActiveSubRoute } =
+  const { activeRoute, setActiveRoute, setActiveSubRoute, setActiveModal } =
     useContext(PageDataContext);
+  const { currentUser } = useContext(UserDataContext);
 
   const handleHomeClick = () => {
     setActiveRoute("home");
@@ -20,9 +22,13 @@ const Header = () => {
     setActiveRoute("contactMe");
   };
 
+  const handleSignUpClick = () => {
+    setActiveModal("signUp");
+  };
+
   return (
     <header className="header">
-      <p className="header__logo">Jensen Bean</p>
+      <p className="header__logo">{currentUser.name || "Jensen Bean"}</p>
       <div className="header__links">
         <Link
           to="/"
@@ -51,6 +57,12 @@ const Header = () => {
         >
           <p className="header__link-text">Contact Me</p>
         </Link>
+        <button
+          className={`header__link header__signup-button`}
+          onClick={handleSignUpClick}
+        >
+          Make Your Own Account!
+        </button>
       </div>
     </header>
   );

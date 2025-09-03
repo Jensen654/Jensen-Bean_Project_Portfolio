@@ -1,0 +1,129 @@
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1d2b38;
+  visibility: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+.modal_opened {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+  transition: visibility 0s, opacity 0.5s linear;
+}
+
+.modal__content {
+  /* max-height: 436px; */
+  max-width: 496px;
+  background-color: #e5e8da;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  width: 100%;
+}
+
+.modal__content_type_image {
+  max-width: 498px;
+  max-height: 610px;
+  overflow: hidden;
+}
+
+.modal__form {
+  margin: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal__title {
+  margin: 0 0 24px 0;
+}
+
+.modal__close-button {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  border: none;
+  background-color: transparent;
+  background-image: url("../assets/closeModal.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+}
+
+.modal__close-button:hover {
+  scale: 1.1;
+}
+
+.modal__label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal__input {
+  padding: 5px 12px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid;
+}
+
+.modal__radio-buttons {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 32px;
+}
+
+.modal__legend {
+  margin-bottom: 12px;
+}
+
+.modal__label_type_radio {
+  margin-bottom: 8px;
+}
+
+.modal__radio-input {
+  margin-right: 8px;
+}
+
+.modal__form_submit {
+  background-color: rgba(255, 169, 40, 1);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 10px;
+  align-self: center;
+}
+
+.modal__form_submit:hover {
+  background-color: rgba(255, 169, 40, 0.8);
+}
+
+.modal__form_alternate-button {
+  background-color: transparent;
+  border: none;
+  margin-left: 12px;
+  color: rgba(0, 0, 0, 0.3);
+  font-family: "Cabinet Grotesk", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  cursor: pointer;
+}
