@@ -46,4 +46,9 @@
 .header__signup-button {
   background-color: transparent;
   border: none;
+  max-height: 40px;
+}
+
+.header__menu-icon {
+  max-height: 100%;
 }

@@ -1,4 +1,6 @@
 import "../blocks/ModalWithForm.css";
+import { useContext } from "react";
+import PageDataContext from "../contexts/PageDataContext.js";
 
 function ModalWithForm({
   children,
@@ -10,9 +12,22 @@ function ModalWithForm({
   optionalButtonText,
   optionalButtonTextFunction,
 }) {
+  const { setActiveModal } = useContext(PageDataContext);
+
+  const handleCloseModal = () => {
+    setActiveModal("");
+  };
+
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className={`modal ${isOpen && "modal_opened"}`}>
-      <div className="modal__content">
+    <div
+      onClick={handleCloseModal}
+      className={`modal ${isOpen && "modal_opened"}`}
+    >
+      <div onClick={stopPropagation} className="modal__content">
         <form className="modal__form" onSubmit={handleSubmit}>
           <h3 className="modal__title">{title}</h3>
           <button

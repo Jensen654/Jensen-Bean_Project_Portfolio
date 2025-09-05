@@ -10,17 +10,17 @@
   align-items: center;
   justify-content: center;
   color: #1d2b38;
-  visibility: none;
+  /* visibility: none; */
   opacity: 0;
   pointer-events: none;
-  transition: visibility 0s 0.5s, opacity 0.5s linear;
+  transition: opacity 0.3s linear;
 }
 
 .modal_opened {
-  visibility: visible;
+  /* visibility: visible; */
   opacity: 1;
   pointer-events: all;
-  transition: visibility 0s, opacity 0.5s linear;
+  transition: opacity 0.3s linear;
 }
 
 .modal__content {

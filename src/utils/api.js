@@ -28,7 +28,7 @@ const confirmUser = (token) => {
 };
 
 const loginUser = (email, password) => {
-  return fetch(`${BASE_URL}/users/login`, {
+  return fetch(`${BASE_URL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -37,8 +37,8 @@ const loginUser = (email, password) => {
   }).then((res) => handleResponse(res));
 };
 
-const signUpUser = (name, email, password) => {
-  return fetch(`${BASE_URL}/users/signup`, {
+const signUpUser = ({ name, email, password }) => {
+  return fetch(`${BASE_URL}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

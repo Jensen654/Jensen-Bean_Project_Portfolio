@@ -20,6 +20,8 @@ import {
   loginUser,
 } from "../utils/api.js";
 import SignUpModal from "./SignUpModal.jsx";
+import LoginModal from "./LoginModal.jsx";
+import Menu from "./Menu.jsx";
 
 function App() {
   const [activeRoute, setActiveRoute] = useState("");
@@ -28,6 +30,7 @@ function App() {
   const [projects, setProjects] = useState([]);
   const [activeModal, setActiveModal] = useState("");
   const [currentUser, setCurrentUser] = useState({ name: "" });
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
@@ -51,9 +54,25 @@ function App() {
     setActiveModal("");
   };
 
-  const handleSignUp = (name, email, password) => {
-    setCurrentUser({ name });
-    signUpUser(name, email, password)
+  const handleSignUp = (event, name, email, password) => {
+    event.preventDefault();
+    setCurrentUser({ name: name });
+    signUpUser({ name, email, password })
+      .then((token) => {
+        localStorage.setItem("jwt", token);
+        handleCloseModal();
+        console.log(token);
+      })
+      .catch((err) => {
+        localStorage.removeItem("jwt");
+        console.error(err);
+        setCurrentUser({ name: "" });
+      });
+  };
+
+  const handleLogin = (event, email, password) => {
+    event.preventDefault();
+    loginUser(email, password)
       .then((token) => {
         localStorage.setItem("jwt", token);
         handleCloseModal();
@@ -78,10 +97,13 @@ function App() {
             setButtonPressed,
             activeModal,
             setActiveModal,
+            setMenuOpen,
+            menuOpen,
           }}
         >
           <div className="page">
             <Header />
+            <Menu />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="projects" element={<Projects />}>
@@ -92,12 +114,18 @@ function App() {
             </Routes>
           </div>
           <Footer />
-          {activeModal === "signUp" && (
-            <SignUpModal
-              handleCloseModal={handleCloseModal}
-              handleSubmit={handleSignUp}
-            />
-          )}
+          {/* {activeModal === "signUp" && ( */}
+          <SignUpModal
+            handleCloseModal={handleCloseModal}
+            handleSubmit={handleSignUp}
+          />
+          {/* )} */}
+          {/* {activeModal === "logIn" && ( */}
+          <LoginModal
+            handleCloseModal={handleCloseModal}
+            handleSubmit={handleLogin}
+          />
+          {/* )} */}
         </PageDataContext.Provider>
       </ProjectDataContext.Provider>
     </UserDataContext.Provider>

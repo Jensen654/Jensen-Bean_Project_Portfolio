@@ -2,10 +2,9 @@ import ModalWithForm from "./ModalWithForm";
 import { useContext, useState } from "react";
 import PageDataContext from "../contexts/PageDataContext";
 
-const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
+const LoginModal = ({ handleCloseModal, handleSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const { activeModal } = useContext(PageDataContext);
 
   const handleEmailChange = (e) => {
@@ -16,56 +15,42 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
     setPassword(e.target.value);
   };
 
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-
   const handleSubmitForm = (e) => {
     e.preventDefault();
-    handleSubmit(e, name, email, password);
+    handleSubmit(e, email, password);
   };
 
   return (
     <ModalWithForm
-      title="Sign Up"
-      buttonText="Create Account"
-      isOpen={activeModal === "signUp"}
+      title="Log In"
+      buttonText="Log In"
+      isOpen={activeModal === "logIn"}
       handleCloseClick={handleCloseModal}
       handleSubmit={handleSubmitForm}
     >
-      <label htmlFor="SignUpName" className="modal__label">
-        Name:
-        <input
-          id="SignUpName"
-          type="text"
-          name="username"
-          value={name}
-          onChange={handleNameChange}
-          className="modal__input"
-          required
-        />
-      </label>
-      <label htmlFor="SignUpEmail" className="modal__label">
+      <label htmlFor="LoginEmail" className="modal__label">
         Email:
         <input
-          id="SignUpEmail"
+          id="LoginEmail"
           type="email"
           name="email"
           value={email}
           onChange={handleEmailChange}
           className="modal__input"
+          placeholder="Enter your email"
           required
         />
       </label>
-      <label htmlFor="SignUpPassword" className="modal__label">
+      <label htmlFor="LoginPassword" className="modal__label">
         Password:
         <input
-          id="SignUpPassword"
+          id="LoginPassword"
           type="password"
           name="password"
           value={password}
           onChange={handlePasswordChange}
           className="modal__input"
+          placeholder="Enter your password"
           required
         />
       </label>
@@ -73,4 +58,4 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
   );
 };
 
-export default SignUpModal;
+export default LoginModal;
