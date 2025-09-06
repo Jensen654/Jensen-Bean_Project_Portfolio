@@ -17,7 +17,7 @@ const LoginModal = ({ handleCloseModal, handleSubmit }) => {
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
-    handleSubmit(e, email, password);
+    handleSubmit({ email, password });
   };
 
   return (

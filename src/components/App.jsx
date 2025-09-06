@@ -21,6 +21,7 @@ import {
 } from "../utils/api.js";
 import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
+import EditProfileModal from "./EditProfileModal.jsx";
 import Menu from "./Menu.jsx";
 
 function App() {
@@ -29,12 +30,39 @@ function App() {
   const [buttonPressed, setButtonPressed] = useState({});
   const [projects, setProjects] = useState([]);
   const [activeModal, setActiveModal] = useState("");
-  const [currentUser, setCurrentUser] = useState({ name: "" });
+  const [currentUser, setCurrentUser] = useState({
+    name: "",
+    avatar: "",
+    profession: "",
+    about: "",
+    resume: "",
+  });
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    confirmUser(token);
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      confirmUser(jwt)
+        .then((user) => {
+          setIsUserLoggedIn(true);
+          setCurrentUser({
+            name: user.name,
+            avatar: user.avatar,
+            profession: user.profession,
+            about: user.about,
+            resume: user.resumeUrl,
+          });
+        })
+        .catch((err) => {
+          console.error("Error checking token:", err);
+          // localStorage.removeItem("jwt");
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProjects();
   }, []);
 
   const fetchProjects = async () => {
@@ -46,46 +74,50 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
   const handleCloseModal = () => {
     setActiveModal("");
   };
 
-  const handleSignUp = (event, name, email, password) => {
-    event.preventDefault();
-    setCurrentUser({ name: name });
+  const handleSignUp = ({ name, email, password }) => {
+    setCurrentUser({
+      name: user.name,
+      avatar: user.avatar,
+      profession: user.profession,
+      about: user.about,
+      resume: user.resumeUrl,
+    });
     signUpUser({ name, email, password })
-      .then((token) => {
+      .then(({ token }) => {
         localStorage.setItem("jwt", token);
         handleCloseModal();
-        console.log(token);
+        setIsUserLoggedIn(true);
+        // console.log(token);
       })
       .catch((err) => {
-        localStorage.removeItem("jwt");
         console.error(err);
-        setCurrentUser({ name: "" });
+        setCurrentUser({
+          name: "",
+          avatar: "",
+          profession: "",
+          about: "",
+          resume: "",
+        });
       });
   };
 
-  const handleLogin = (event, email, password) => {
-    event.preventDefault();
-    loginUser(email, password)
+  const handleLogin = ({ email, password }) => {
+    loginUser({ email, password })
       .then((token) => {
-        localStorage.setItem("jwt", token);
+        console.log(token);
+        setIsUserLoggedIn(true);
+        localStorage.setItem("jwt", token.token);
         handleCloseModal();
       })
-      .catch((err) => {
-        localStorage.removeItem("jwt");
-        console.error(err);
-        setCurrentUser({ name: "" });
-      });
+      .catch(console.error);
   };
 
   return (
-    <UserDataContext.Provider value={{ currentUser }}>
+    <UserDataContext.Provider value={{ currentUser, isUserLoggedIn }}>
       <ProjectDataContext.Provider value={{ projects }}>
         <PageDataContext.Provider
           value={{
@@ -114,18 +146,15 @@ function App() {
             </Routes>
           </div>
           <Footer />
-          {/* {activeModal === "signUp" && ( */}
           <SignUpModal
             handleCloseModal={handleCloseModal}
             handleSubmit={handleSignUp}
           />
-          {/* )} */}
-          {/* {activeModal === "logIn" && ( */}
           <LoginModal
             handleCloseModal={handleCloseModal}
             handleSubmit={handleLogin}
           />
-          {/* )} */}
+          <EditProfileModal handleCloseModal={handleCloseModal} />
         </PageDataContext.Provider>
       </ProjectDataContext.Provider>
     </UserDataContext.Provider>

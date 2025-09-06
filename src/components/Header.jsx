@@ -32,7 +32,7 @@ const Header = () => {
       <p className="header__logo">
         {typeof currentUser.name === "string" && currentUser.name.length > 0
           ? currentUser.name
-          : "Jensen Bean"}
+          : "Your Name Here"}
       </p>
       <div className="header__links">
         <Link

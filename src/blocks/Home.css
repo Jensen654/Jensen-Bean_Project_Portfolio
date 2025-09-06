@@ -1,6 +1,25 @@
 .home {
 }
 
+.home__edit-profile-button {
+  background-color: #ffa928;
+  padding: 6px 8px;
+  box-shadow: 2px 2px 2px gray;
+  color: #1d2b38;
+  transition: background-color 100ms, color 100ms, box-shadow 100ms;
+  border: 1px solid;
+  margin-bottom: 20px;
+}
+
+.home__edit-profile-button:hover {
+  background-color: #1d2b38;
+  color: #ffa928;
+  box-shadow: 5px 5px 5px gray;
+  cursor: pointer;
+  transition: background-color 100ms, color 100ms, box-shadow 100ms;
+  /* border: none; */
+}
+
 .home__intro {
   display: flex;
   justify-content: space-evenly;

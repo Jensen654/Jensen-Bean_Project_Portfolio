@@ -1,10 +1,17 @@
 import { Link, Outlet } from "react-router-dom";
 import "../blocks/Projects.css";
 import PageDataContext from "../contexts/PageDataContext";
+import UserDataContext from "../contexts/UserDataContext";
 import { useContext } from "react";
 
 const Projects = () => {
-  const { activeSubRoute, setActiveSubRoute } = useContext(PageDataContext);
+  const { activeSubRoute, setActiveSubRoute, setActiveModal } =
+    useContext(PageDataContext);
+  const { isUserLoggedIn } = useContext(UserDataContext);
+
+  const handleAddProjectClick = () => {
+    setActiveModal("add-project");
+  };
 
   const clickWebApps = () => {
     setActiveSubRoute("web-applications");
@@ -15,6 +22,14 @@ const Projects = () => {
 
   return (
     <div className="projects">
+      {isUserLoggedIn && (
+        <button
+          className="home__edit-profile-button"
+          onClick={handleAddProjectClick}
+        >
+          Add Project
+        </button>
+      )}
       <nav className="project__nav">
         <Link
           onClick={clickWebApps}

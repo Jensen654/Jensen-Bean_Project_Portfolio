@@ -27,7 +27,7 @@ const confirmUser = (token) => {
   }).then((res) => handleResponse(res));
 };
 
-const loginUser = (email, password) => {
+const loginUser = ({ email, password }) => {
   return fetch(`${BASE_URL}/login`, {
     method: "POST",
     headers: {
@@ -47,4 +47,15 @@ const signUpUser = ({ name, email, password }) => {
   }).then((res) => handleResponse(res));
 };
 
-export { getProjects, confirmUser, loginUser, signUpUser };
+const editUser = ({ name, email, profession, resume, about }, token) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ name, email, profession, resumeUrl: resume, about }),
+  }).then((res) => handleResponse(res));
+};
+
+export { getProjects, confirmUser, loginUser, signUpUser, editUser };

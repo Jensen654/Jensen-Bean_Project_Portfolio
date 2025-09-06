@@ -10,13 +10,14 @@
 .header__logo {
   margin: 0;
   align-self: center;
-  color: #def3ef;
+  color: #f6f7ea;
   font-size: 2.5rem;
 }
 
 .header__links {
   justify-content: end;
   display: flex;
+  align-items: center;
 }
 
 .header__link {
@@ -24,7 +25,7 @@
   align-content: center;
   font-weight: 400;
   transition: scale 80ms;
-  color: #def3ef;
+  color: #f6f7ea;
   font-size: 2rem;
   text-decoration: none;
   cursor: pointer;
@@ -36,7 +37,7 @@
 }
 
 .header__link-focus {
-  border-bottom: 1px solid #def3ef;
+  border-bottom: 1px solid #f6f7ea;
 }
 
 .header__link-text {
@@ -46,9 +47,9 @@
 .header__signup-button {
   background-color: transparent;
   border: none;
-  max-height: 40px;
+  max-height: 30px;
 }
 
 .header__menu-icon {
-  max-height: 100%;
+  max-height: 30px;
 }

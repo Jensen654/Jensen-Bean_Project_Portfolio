@@ -22,7 +22,7 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
-    handleSubmit(e, name, email, password);
+    handleSubmit({ name, email, password });
   };
 
   return (
