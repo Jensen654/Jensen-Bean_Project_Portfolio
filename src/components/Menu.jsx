@@ -1,9 +1,11 @@
 import "../blocks/Menu.css";
 import { useContext } from "react";
 import PageDataContext from "../contexts/PageDataContext.js";
+import UserDataContext from "../contexts/UserDataContext.js";
 
-const Menu = () => {
+const Menu = ({ handleLogOut }) => {
   const { menuOpen, setMenuOpen, setActiveModal } = useContext(PageDataContext);
+  const { isUserLoggedIn } = useContext(UserDataContext);
 
   const handleCloseMenu = () => {
     setMenuOpen(false);
@@ -29,12 +31,26 @@ const Menu = () => {
       onClick={handleCloseMenu}
     >
       <div className="menu" onClick={stopPropagation}>
-        <button onClick={handleSignUpClick} className="menu__item">
-          Create Your Own Profile!
-        </button>
-        <button onClick={handleLoginClick} className="menu__item">
-          Log In
-        </button>
+        {!isUserLoggedIn && (
+          <>
+            <button onClick={handleSignUpClick} className="menu__item">
+              Create Your Own Profile!
+            </button>
+            <button onClick={handleLoginClick} className="menu__item">
+              Log In
+            </button>
+          </>
+        )}
+        {isUserLoggedIn && (
+          <>
+            <button onClick={handleLogOut} className="menu__item">
+              Log Out
+            </button>
+            <button className="menu__item menu__item_delete">
+              Delete Profile
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -22,6 +22,7 @@ import {
 import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
 import EditProfileModal from "./EditProfileModal.jsx";
+import AddProjectModal from "./AddProjectModal.jsx";
 import Menu from "./Menu.jsx";
 
 function App() {
@@ -116,6 +117,19 @@ function App() {
       .catch(console.error);
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem("jwt");
+    setIsUserLoggedIn(false);
+    setCurrentUser({
+      name: "",
+      avatar: "",
+      profession: "",
+      about: "",
+      resume: "",
+    });
+    setMenuOpen(false);
+  };
+
   return (
     <UserDataContext.Provider value={{ currentUser, isUserLoggedIn }}>
       <ProjectDataContext.Provider value={{ projects }}>
@@ -135,7 +149,7 @@ function App() {
         >
           <div className="page">
             <Header />
-            <Menu />
+            <Menu handleLogOut={handleLogOut} />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="projects" element={<Projects />}>
@@ -155,6 +169,7 @@ function App() {
             handleSubmit={handleLogin}
           />
           <EditProfileModal handleCloseModal={handleCloseModal} />
+          <AddProjectModal handleCloseModal={handleCloseModal} />
         </PageDataContext.Provider>
       </ProjectDataContext.Provider>
     </UserDataContext.Provider>

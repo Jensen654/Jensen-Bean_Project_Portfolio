@@ -7,99 +7,93 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit }) => {
   const { activeModal } = useContext(PageDataContext);
   const { currentUser } = useContext(UserDataContext);
 
-  const [email, setEmail] = useState(currentUser.email);
-  //   const [password, setPassword] = useState(currentUser.password);
-  const [name, setName] = useState(currentUser.name);
-  const [profession, setProfession] = useState(currentUser.profession);
-  const [resume, setResume] = useState(currentUser.resume);
-  const [about, setAbout] = useState(currentUser.about);
+  const [projectName, setprojectName] = useState("");
+  const [projectUrl, setProjectUrl] = useState("");
+  const [projectVideo, setProjectVideo] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
 
-  const handleNameChange = (e) => {
-    setName(e.target.value);
+  const handleProjectNameChange = (e) => {
+    setprojectName(e.target.value);
   };
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+  const handleProjectUrlChange = (e) => {
+    setProjectUrl(e.target.value);
   };
 
-  const handleProfessionChange = (e) => {
-    setProfession(e.target.value);
+  const handleProjectVideoChange = (e) => {
+    setProjectVideo(e.target.value);
   };
 
-  const handleResumeChange = (e) => {
-    setResume(e.target.value);
-  };
-
-  const handleAboutChange = (e) => {
-    setAbout(e.target.value);
+  const handleProjectDescriptionChange = (e) => {
+    setProjectDescription(e.target.value);
   };
 
   return (
     <ModalWithForm
       title="Edit Profile"
       buttonText="Save Changes"
-      isOpen={activeModal === "editProfile"}
+      isOpen={activeModal === "add-project"}
       handleCloseClick={handleCloseModal}
       handleSubmit={handleSubmit}
     >
-      <label htmlFor="EditName" className="modal__label">
-        Name:
+      <label htmlFor="ProjectName" className="modal__label">
+        Project Name:
         <input
-          id="EditName"
+          id="ProjectName"
           type="text"
-          name="username"
-          value={name}
-          onChange={handleNameChange}
+          name="ProjectName"
+          value={projectName}
+          onChange={handleProjectNameChange}
           className="modal__input"
           required
         />
       </label>
-      {/* <label htmlFor="EditEmail" className="modal__label">
-        Email:
+      <label htmlFor="ProjectUrl" className="modal__label">
+        Project URL:
         <input
-          id="EditEmail"
-          type="email"
-          name="email"
-          value={email}
-          onChange={handleEmailChange}
-          className="modal__input"
-          required
-        />
-      </label> */}
-      <label htmlFor="EditProfession" className="modal__label">
-        Profession:
-        <input
-          id="EditProfession"
+          id="ProjectUrl"
           type="text"
-          name="profession"
-          value={profession}
-          onChange={handleProfessionChange}
+          name="Project URL"
+          value={projectUrl}
+          onChange={handleProjectUrlChange}
           className="modal__input"
           //   required
         />
       </label>
-      <label htmlFor="EditResume" className="modal__label">
-        Resume:
+      <label htmlFor="ProjectVideo" className="modal__label">
+        YouTube Video URL:
         <input
-          id="EditResume"
+          id="ProjectVideo"
           type="text"
-          name="resume"
-          value={resume}
-          onChange={handleResumeChange}
+          name="ProjectVideo"
+          value={projectVideo}
+          onChange={handleProjectVideoChange}
           className="modal__input"
           //   required
         />
       </label>
-      <label htmlFor="EditAbout" className="modal__label">
-        About:
+      <label htmlFor="ProjectDescription" className="modal__label">
+        Project Description:
         <textarea
-          id="EditAbout"
+          id="ProjectDescription"
           type="text"
           name="about"
-          value={about}
-          onChange={handleAboutChange}
+          value={projectDescription}
+          onChange={handleProjectDescriptionChange}
           className="modal__input"
-          required
+          //   required
+        />
+      </label>
+      <label htmlFor="ProjectPicture" className="modal__label">
+        Project Picture:
+        <input
+          id="ProjectPicture"
+          type="file"
+          name="ProjectPicture"
+          //   value={profession}
+          //   onChange={handleProfessionChange}
+          className="modal__input modal__input_type_file"
+          //   required
         />
       </label>
     </ModalWithForm>

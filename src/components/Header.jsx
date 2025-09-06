@@ -8,7 +8,8 @@ import MenuSvg from "../assets/menu-icon.svg";
 const Header = () => {
   const { activeRoute, setActiveRoute, setActiveSubRoute, setMenuOpen } =
     useContext(PageDataContext);
-  const { currentUser } = useContext(UserDataContext);
+  const { currentUser, setCurrentUser, setIsUserLoggedIn } =
+    useContext(UserDataContext);
 
   const handleHomeClick = () => {
     setActiveRoute("home");
