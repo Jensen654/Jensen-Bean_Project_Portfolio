@@ -45,4 +45,6 @@ const PROJECTS = [
   },
 ];
 
-export default PROJECTS;
+const acceptedImageTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+export { PROJECTS, acceptedImageTypes };

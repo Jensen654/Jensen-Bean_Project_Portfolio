@@ -18,12 +18,15 @@ import {
   confirmUser,
   signUpUser,
   loginUser,
+  getUploadUrl,
+  uploadPhoto,
 } from "../utils/api.js";
 import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
 import EditProfileModal from "./EditProfileModal.jsx";
 import AddProjectModal from "./AddProjectModal.jsx";
 import Menu from "./Menu.jsx";
+import { acceptedImageTypes } from "../utils/constants.js";
 
 function App() {
   const [activeRoute, setActiveRoute] = useState("");
@@ -128,6 +131,21 @@ function App() {
       resume: "",
     });
     setMenuOpen(false);
+  };
+
+  const handleUpload = async (file) => {
+    if (file.size > 3 * 1024 * 1024 || acceptedImageTypes.includes(file.type)) {
+      // 3MB limit
+      alert("Either your file is too big or not the right type!");
+      return;
+    }
+
+    const res = await getUploadUrl();
+    const { url } = await res.json();
+
+    await uploadPhoto(file, url);
+
+    console.log("Upload successful!");
   };
 
   return (

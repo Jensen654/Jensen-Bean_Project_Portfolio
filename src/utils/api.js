@@ -58,4 +58,28 @@ const editUser = ({ name, email, profession, resume, about }, token) => {
   }).then((res) => handleResponse(res));
 };
 
-export { getProjects, confirmUser, loginUser, signUpUser, editUser };
+const getUploadUrl = () => {
+  return fetch(`${BASE_URL}/users/upload-url`, {
+    method: "GET",
+  }).then((res) => handleResponse(res));
+};
+
+const uploadPhoto = (file, uploadUrl) => {
+  return fetch(uploadUrl, {
+    method: "PUT",
+    headers: {
+      "Content-Type": file.type,
+    },
+    body: file,
+  }).then((res) => handleResponse(res));
+};
+
+export {
+  getProjects,
+  confirmUser,
+  loginUser,
+  signUpUser,
+  editUser,
+  getUploadUrl,
+  uploadPhoto,
+};
