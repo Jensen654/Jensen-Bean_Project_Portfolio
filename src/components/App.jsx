@@ -20,6 +20,7 @@ import {
   loginUser,
   getUploadUrl,
   uploadPhoto,
+  updateUserInfo,
 } from "../utils/api.js";
 import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
@@ -43,6 +44,7 @@ function App() {
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [newAvatarUrl, setNewAvatarUrl] = useState("");
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -112,7 +114,6 @@ function App() {
   const handleLogin = ({ email, password }) => {
     loginUser({ email, password })
       .then((token) => {
-        console.log(token);
         setIsUserLoggedIn(true);
         localStorage.setItem("jwt", token.token);
         handleCloseModal();
@@ -134,22 +135,51 @@ function App() {
   };
 
   const handleUpload = async (file) => {
-    if (file.size > 3 * 1024 * 1024 || acceptedImageTypes.includes(file.type)) {
+    if (file.size > 3 * 1024 * 1024) {
       // 3MB limit
       alert("Either your file is too big or not the right type!");
       return;
     }
 
-    const res = await getUploadUrl();
-    const { url } = await res.json();
+    const { uploadUrl, key } = await getUploadUrl();
 
-    await uploadPhoto(file, url);
+    setNewAvatarUrl(
+      `https://myimagedatabasejensenbean.s3.us-east-2.amazonaws.com/${key}`
+    );
 
-    console.log("Upload successful!");
+    return await uploadPhoto(file, uploadUrl).catch((err) => {
+      console.error("Error uploading file:", err);
+      setNewAvatarUrl("");
+    });
+  };
+
+  const handleUpdateUserInfo = ({
+    name,
+    avatar,
+    email,
+    profession,
+    resume,
+    about,
+  }) => {
+    const token = localStorage.getItem("jwt");
+    updateUserInfo({ name, avatar, email, profession, resume, about }, token)
+      .then((updatedUser) => {
+        setCurrentUser({
+          name: updatedUser.newDoc.name,
+          avatar: updatedUser.newDoc.avatar,
+          profession: updatedUser.newDoc.profession,
+          about: updatedUser.newDoc.about,
+          resume: updatedUser.newDoc.resumeUrl,
+        });
+        handleCloseModal();
+      })
+      .catch(console.error);
   };
 
   return (
-    <UserDataContext.Provider value={{ currentUser, isUserLoggedIn }}>
+    <UserDataContext.Provider
+      value={{ currentUser, isUserLoggedIn, newAvatarUrl }}
+    >
       <ProjectDataContext.Provider value={{ projects }}>
         <PageDataContext.Provider
           value={{
@@ -188,6 +218,7 @@ function App() {
           />
           <EditProfileModal
             handleUpload={handleUpload}
+            handleSubmit={handleUpdateUserInfo}
             handleCloseModal={handleCloseModal}
           />
           <AddProjectModal handleCloseModal={handleCloseModal} />

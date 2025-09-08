@@ -1,4 +1,3 @@
-import PROJECTS from "../utils/constants";
 import ProjectDisplay from "./ProjectDisplay";
 import { useContext } from "react";
 import ProjectDataContext from "../contexts/ProjectDataContext";

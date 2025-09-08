@@ -61,6 +61,9 @@ const editUser = ({ name, email, profession, resume, about }, token) => {
 const getUploadUrl = () => {
   return fetch(`${BASE_URL}/users/upload-url`, {
     method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
   }).then((res) => handleResponse(res));
 };
 
@@ -74,6 +77,27 @@ const uploadPhoto = (file, uploadUrl) => {
   }).then((res) => handleResponse(res));
 };
 
+const updateUserInfo = (
+  { name, avatar, email, profession, resume, about },
+  token
+) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      name,
+      avatar,
+      email,
+      profession,
+      resumeUrl: resume,
+      about,
+    }),
+  }).then((res) => handleResponse(res));
+};
+
 export {
   getProjects,
   confirmUser,
@@ -82,4 +106,5 @@ export {
   editUser,
   getUploadUrl,
   uploadPhoto,
+  updateUserInfo,
 };

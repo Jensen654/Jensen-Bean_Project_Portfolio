@@ -5,7 +5,7 @@ import UserDataContext from "../contexts/UserDataContext";
 
 const EditProfileModal = ({ handleCloseModal, handleSubmit, handleUpload }) => {
   const { activeModal } = useContext(PageDataContext);
-  const { currentUser } = useContext(UserDataContext);
+  const { currentUser, newAvatarUrl } = useContext(UserDataContext);
 
   const [email, setEmail] = useState(currentUser.email);
   //   const [password, setPassword] = useState(currentUser.password);
@@ -13,6 +13,7 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit, handleUpload }) => {
   const [profession, setProfession] = useState(currentUser.profession);
   const [resume, setResume] = useState(currentUser.resume);
   const [about, setAbout] = useState(currentUser.about);
+  const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
     setEmail(currentUser.email);
@@ -26,8 +27,8 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit, handleUpload }) => {
     setName(e.target.value);
   };
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+  const handleAvatarChange = (e) => {
+    setAvatar(e.target.files[0]);
   };
 
   const handleProfessionChange = (e) => {
@@ -42,8 +43,25 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit, handleUpload }) => {
     setAbout(e.target.value);
   };
 
-  const handleSubmit = () => {
-    handleUpload({ name, email, profession, resume, about });
+  const handleSubmitForm = (e) => {
+    e.preventDefault();
+
+    if (avatar) {
+      handleUpload(avatar).then(() => {
+        handleSubmit({
+          avatar: newAvatarUrl,
+        });
+      });
+    }
+
+    handleSubmit({
+      name,
+      avatar: newAvatarUrl,
+      email,
+      profession,
+      resume,
+      about,
+    });
   };
 
   return (
@@ -52,7 +70,7 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit, handleUpload }) => {
       buttonText="Save Changes"
       isOpen={activeModal === "editProfile"}
       handleCloseClick={handleCloseModal}
-      handleSubmit={handleSubmit}
+      handleSubmit={handleSubmitForm}
     >
       <label htmlFor="EditName" className="modal__label">
         Name:
@@ -99,6 +117,18 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit, handleUpload }) => {
           value={resume}
           onChange={handleResumeChange}
           className="modal__input"
+          //   required
+        />
+      </label>
+      <label htmlFor="EditAvatar" className="modal__label">
+        Profile Picture:
+        <input
+          id="EditAvatar"
+          type="file"
+          name="EditAvatar"
+          //   value={resume}
+          onChange={handleAvatarChange}
+          className="modal__input modal__input_type_file"
           //   required
         />
       </label>
