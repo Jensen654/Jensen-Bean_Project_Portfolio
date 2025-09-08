@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import PageDataContext from "../contexts/PageDataContext";
 import UserDataContext from "../contexts/UserDataContext";
 
-const EditProfileModal = ({ handleCloseModal, handleSubmit }) => {
+const EditProfileModal = ({ handleCloseModal, handleSubmit, handleUpload }) => {
   const { activeModal } = useContext(PageDataContext);
   const { currentUser } = useContext(UserDataContext);
 
@@ -40,6 +40,10 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit }) => {
 
   const handleAboutChange = (e) => {
     setAbout(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    handleUpload({ name, email, profession, resume, about });
   };
 
   return (

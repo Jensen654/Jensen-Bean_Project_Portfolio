@@ -186,7 +186,10 @@ function App() {
             handleCloseModal={handleCloseModal}
             handleSubmit={handleLogin}
           />
-          <EditProfileModal handleCloseModal={handleCloseModal} />
+          <EditProfileModal
+            handleUpload={handleUpload}
+            handleCloseModal={handleCloseModal}
+          />
           <AddProjectModal handleCloseModal={handleCloseModal} />
         </PageDataContext.Provider>
       </ProjectDataContext.Provider>
