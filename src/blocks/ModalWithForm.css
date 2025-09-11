@@ -89,7 +89,6 @@
   border: none;
   padding: 0;
   margin: 0;
-  margin-bottom: 32px;
 }
 
 .modal__legend {
@@ -98,6 +97,11 @@
 
 .modal__label_type_radio {
   margin-bottom: 8px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: start;
+  gap: 10px;
+  margin-left: 40%;
 }
 
 .modal__radio-input {

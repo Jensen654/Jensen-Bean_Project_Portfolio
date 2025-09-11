@@ -43,7 +43,10 @@ const Home = () => {
         <img
           className="home__intro-image"
           // src="src/assets/JensenHeadshot.JPG"
-          src={currentUser.avatar}
+          src={
+            currentUser.avatar ||
+            "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-profile-picture-business-profile-woman-suitable-social-media-profiles-icons-screensavers-as-templatex9_719432-1351.jpg?semt=ais_hybrid&w=740&q=80"
+          }
           alt={currentUser.name}
         />
       </section>

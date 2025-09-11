@@ -2,15 +2,15 @@ import ProjectDisplay from "./ProjectDisplay";
 import { useContext } from "react";
 import ProjectDataContext from "../contexts/ProjectDataContext";
 
-const WebApplications = () => {
+const TechProjects = () => {
   const { projects } = useContext(ProjectDataContext);
 
   return (
-    <div className="web-applications">
-      <h1>Web Applications</h1>
+    <div className="tech-projects">
+      <h1>Tech Projects</h1>
       <p>Here you can find a selection of my web applications.</p>
       {projects
-        .filter((project) => project.type === "web")
+        .filter((project) => project.type === "tech")
         .map((project) => (
           <ProjectDisplay
             key={project._id}
@@ -24,4 +24,4 @@ const WebApplications = () => {
   );
 };
 
-export default WebApplications;
+export default TechProjects;

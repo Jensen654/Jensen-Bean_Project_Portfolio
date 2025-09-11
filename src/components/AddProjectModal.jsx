@@ -3,7 +3,11 @@ import { useContext, useEffect, useState } from "react";
 import PageDataContext from "../contexts/PageDataContext";
 import UserDataContext from "../contexts/UserDataContext";
 
-const EditProfileModal = ({ handleCloseModal, handleSubmit }) => {
+const EditProfileModal = ({
+  handleCloseModal,
+  handleUploadProjectImage,
+  handleSubmit,
+}) => {
   const { activeModal } = useContext(PageDataContext);
   const { currentUser } = useContext(UserDataContext);
 
@@ -11,6 +15,8 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit }) => {
   const [projectUrl, setProjectUrl] = useState("");
   const [projectVideo, setProjectVideo] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
+  const [projectImage, setProjectImage] = useState(null);
+  const [projectType, setProjectType] = useState("");
 
   const handleProjectNameChange = (e) => {
     setprojectName(e.target.value);
@@ -28,13 +34,39 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit }) => {
     setProjectDescription(e.target.value);
   };
 
+  const handleProjectImageChange = (e) => {
+    setProjectImage(e.target.files[0]);
+  };
+
+  const handleProjectTypeChange = (e) => {
+    setProjectType(e.target.id);
+  };
+
+  const handleSubmitForm = (e) => {
+    e.preventDefault();
+
+    if (projectImage) {
+      handleUploadProjectImage(projectImage).then((data) => {
+        handleSubmit({ image: data });
+      });
+    }
+
+    handleSubmit({
+      type: projectType,
+      title: projectName,
+      description: projectDescription,
+      url: projectUrl,
+      videoUrl: projectVideo,
+    });
+  };
+
   return (
     <ModalWithForm
       title="Edit Profile"
       buttonText="Save Changes"
       isOpen={activeModal === "add-project"}
       handleCloseClick={handleCloseModal}
-      handleSubmit={handleSubmit}
+      handleSubmit={handleSubmitForm}
     >
       <label htmlFor="ProjectName" className="modal__label">
         Project Name:
@@ -57,6 +89,7 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit }) => {
           value={projectUrl}
           onChange={handleProjectUrlChange}
           className="modal__input"
+          placeholder="Optional"
           //   required
         />
       </label>
@@ -69,7 +102,60 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit }) => {
           value={projectVideo}
           onChange={handleProjectVideoChange}
           className="modal__input"
+          placeholder="Optional"
           //   required
+        />
+      </label>
+      <fieldset className="modal__radio-buttons" required>
+        <legend className="modal__legend">Select the Project Type:</legend>
+        <label htmlFor="tech" className="modal__label_type_radio">
+          Tech
+          <input
+            checked={projectType === "tech"}
+            id="tech"
+            type="radio"
+            name="Tech"
+            onChange={handleProjectTypeChange}
+            className="modal__input"
+            // required
+          />
+        </label>
+        <label htmlFor="performance" className="modal__label_type_radio">
+          Performance
+          <input
+            checked={projectType === "performance"}
+            id="performance"
+            type="radio"
+            name="Performance"
+            onChange={handleProjectTypeChange}
+            className="modal__input"
+            // required
+          />
+        </label>
+        <label htmlFor="other" className="modal__label_type_radio">
+          Other
+          <input
+            checked={projectType === "other"}
+            id="other"
+            type="radio"
+            name="Other"
+            onChange={handleProjectTypeChange}
+            className="modal__input"
+            // required
+          />
+        </label>
+      </fieldset>
+      <label htmlFor="ProjectPicture" className="modal__label">
+        Project Picture:
+        <input
+          id="ProjectPicture"
+          type="file"
+          name="ProjectPicture"
+          //   value={profession}
+          onChange={handleProjectImageChange}
+          className="modal__input modal__input_type_file"
+          //   required
+          placeholder="Optional"
         />
       </label>
       <label htmlFor="ProjectDescription" className="modal__label">
@@ -81,19 +167,8 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit }) => {
           value={projectDescription}
           onChange={handleProjectDescriptionChange}
           className="modal__input"
-          //   required
-        />
-      </label>
-      <label htmlFor="ProjectPicture" className="modal__label">
-        Project Picture:
-        <input
-          id="ProjectPicture"
-          type="file"
-          name="ProjectPicture"
-          //   value={profession}
-          //   onChange={handleProfessionChange}
-          className="modal__input modal__input_type_file"
-          //   required
+          required
+          // placeholder="Optional"
         />
       </label>
     </ModalWithForm>

@@ -3,9 +3,13 @@ import { useContext, useEffect, useState } from "react";
 import PageDataContext from "../contexts/PageDataContext";
 import UserDataContext from "../contexts/UserDataContext";
 
-const EditProfileModal = ({ handleCloseModal, handleSubmit, handleUpload }) => {
+const EditProfileModal = ({
+  handleCloseModal,
+  handleSubmit,
+  handleUploadAvatar,
+}) => {
   const { activeModal } = useContext(PageDataContext);
-  const { currentUser, newAvatarUrl } = useContext(UserDataContext);
+  const { currentUser } = useContext(UserDataContext);
 
   const [email, setEmail] = useState(currentUser.email);
   //   const [password, setPassword] = useState(currentUser.password);
@@ -43,20 +47,19 @@ const EditProfileModal = ({ handleCloseModal, handleSubmit, handleUpload }) => {
     setAbout(e.target.value);
   };
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
 
     if (avatar) {
-      handleUpload(avatar).then(() => {
+      handleUploadAvatar(avatar).then((data) => {
         handleSubmit({
-          avatar: newAvatarUrl,
+          avatar: data,
         });
       });
     }
 
     handleSubmit({
       name,
-      avatar: newAvatarUrl,
       email,
       profession,
       resume,

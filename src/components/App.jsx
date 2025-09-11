@@ -11,7 +11,7 @@ import PageDataContext from "../contexts/PageDataContext.js";
 import ProjectDataContext from "../contexts/ProjectDataContext.js";
 import UserDataContext from "../contexts/UserDataContext.js";
 import Footer from "./Footer.jsx";
-import WebApplications from "./WebApplications";
+import TechProjects from "./TechProjects.jsx";
 import OtherProjects from "./OtherProjects";
 import {
   getProjects,
@@ -21,6 +21,9 @@ import {
   getUploadUrl,
   uploadPhoto,
   updateUserInfo,
+  getDeleteUrl,
+  deletePhoto,
+  addProject,
 } from "../utils/api.js";
 import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
@@ -28,6 +31,7 @@ import EditProfileModal from "./EditProfileModal.jsx";
 import AddProjectModal from "./AddProjectModal.jsx";
 import Menu from "./Menu.jsx";
 import { acceptedImageTypes } from "../utils/constants.js";
+import PerformanceProjects from "./PerformanceProjects.jsx";
 
 function App() {
   const [activeRoute, setActiveRoute] = useState("");
@@ -44,7 +48,6 @@ function App() {
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  const [newAvatarUrl, setNewAvatarUrl] = useState("");
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -85,38 +88,40 @@ function App() {
   };
 
   const handleSignUp = ({ name, email, password }) => {
-    setCurrentUser({
-      name: user.name,
-      avatar: user.avatar,
-      profession: user.profession,
-      about: user.about,
-      resume: user.resumeUrl,
-    });
     signUpUser({ name, email, password })
-      .then(({ token }) => {
+      .then(({ userData, token }) => {
+        console.log(userData);
         localStorage.setItem("jwt", token);
         handleCloseModal();
         setIsUserLoggedIn(true);
-        // console.log(token);
+        setCurrentUser({
+          name: userData.name,
+          avatar: userData.avatar,
+          profession: userData.profession,
+          about: userData.about,
+          resume: userData.resumeUrl,
+        });
       })
       .catch((err) => {
         console.error(err);
-        setCurrentUser({
-          name: "",
-          avatar: "",
-          profession: "",
-          about: "",
-          resume: "",
-        });
       });
   };
 
   const handleLogin = ({ email, password }) => {
     loginUser({ email, password })
-      .then((token) => {
+      .then(({ token, user }) => {
         setIsUserLoggedIn(true);
-        localStorage.setItem("jwt", token.token);
+        localStorage.setItem("jwt", token);
         handleCloseModal();
+        // console.log(token);
+
+        setCurrentUser({
+          name: user.name,
+          avatar: user.avatar,
+          profession: user.profession,
+          about: user.about,
+          resume: user.resumeUrl,
+        });
       })
       .catch(console.error);
   };
@@ -134,22 +139,56 @@ function App() {
     setMenuOpen(false);
   };
 
-  const handleUpload = async (file) => {
-    if (file.size > 3 * 1024 * 1024) {
+  const handleUploadAvatar = async (file) => {
+    if (currentUser.avatar.length > 0 || currentUser.avatar.length === 0) {
+      handleDeletePhoto();
+    }
+    if (file?.size > 3 * 1024 * 1024) {
       // 3MB limit
       alert("Either your file is too big or not the right type!");
       return;
     }
+    // console.log(file.type);
 
     const { uploadUrl, key } = await getUploadUrl();
+    const newAvatarUrl = `https://myimagedatabasejensenbean.s3.us-east-2.amazonaws.com/${key}`;
 
-    setNewAvatarUrl(
-      `https://myimagedatabasejensenbean.s3.us-east-2.amazonaws.com/${key}`
-    );
-
-    return await uploadPhoto(file, uploadUrl).catch((err) => {
+    await uploadPhoto(file, uploadUrl).catch((err) => {
       console.error("Error uploading file:", err);
-      setNewAvatarUrl("");
+    });
+
+    return newAvatarUrl;
+  };
+
+  const handleUploadProjectImage = async (file) => {
+    // if (currentUser.avatar.length > 0 || currentUser.avatar.length === 0) {
+    //   handleDeletePhoto();
+    // }
+    if (file?.size > 3 * 1024 * 1024) {
+      // 3MB limit
+      alert("Either your file is too big or not the right type!");
+      return;
+    }
+    // console.log(file.type);
+
+    const { uploadUrl, key } = await getUploadUrl();
+    const newProjectImageUrl = `https://myimagedatabasejensenbean.s3.us-east-2.amazonaws.com/${key}`;
+
+    await uploadPhoto(file, uploadUrl).catch((err) => {
+      console.error("Error uploading file:", err);
+    });
+
+    return newProjectImageUrl;
+  };
+
+  const handleDeletePhoto = async () => {
+    const { deleteUrl } = await getDeleteUrl(
+      encodeURIComponent(currentUser.avatar)
+    );
+    // console.log(deleteUrl);
+
+    await deletePhoto(deleteUrl).catch((err) => {
+      console.error("Error deleting file:", err);
     });
   };
 
@@ -176,10 +215,27 @@ function App() {
       .catch(console.error);
   };
 
+  const handleProjectSubmit = async ({
+    type,
+    title,
+    description,
+    url,
+    videoUrl,
+    image,
+  }) => {
+    const token = localStorage.getItem("jwt");
+    await addProject(
+      { type, title, description, url, videoUrl, image },
+      token
+    ).then(({ project }) => {
+      handleCloseModal();
+
+      setProjects((prev) => [...prev, project]);
+    });
+  };
+
   return (
-    <UserDataContext.Provider
-      value={{ currentUser, isUserLoggedIn, newAvatarUrl }}
-    >
+    <UserDataContext.Provider value={{ currentUser, isUserLoggedIn }}>
       <ProjectDataContext.Provider value={{ projects }}>
         <PageDataContext.Provider
           value={{
@@ -201,7 +257,11 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="projects" element={<Projects />}>
-                <Route path="web-applications" element={<WebApplications />} />
+                <Route path="tech-projects" element={<TechProjects />} />
+                <Route
+                  path="performance-projects"
+                  element={<PerformanceProjects />}
+                />
                 <Route path="other-projects" element={<OtherProjects />} />
               </Route>
               <Route path="contactMe" element={<ContactMe />} />
@@ -217,11 +277,15 @@ function App() {
             handleSubmit={handleLogin}
           />
           <EditProfileModal
-            handleUpload={handleUpload}
+            handleUploadAvatar={handleUploadAvatar}
             handleSubmit={handleUpdateUserInfo}
             handleCloseModal={handleCloseModal}
           />
-          <AddProjectModal handleCloseModal={handleCloseModal} />
+          <AddProjectModal
+            handleCloseModal={handleCloseModal}
+            handleSubmit={handleProjectSubmit}
+            handleUploadProjectImage={handleUploadProjectImage}
+          />
         </PageDataContext.Provider>
       </ProjectDataContext.Provider>
     </UserDataContext.Provider>

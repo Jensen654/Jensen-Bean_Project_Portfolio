@@ -17,7 +17,7 @@ const Header = () => {
 
   const handleProjectsClick = () => {
     setActiveRoute("projects");
-    setActiveSubRoute("web-applications");
+    // setActiveSubRoute("tech-projects");
   };
 
   const handleContactMeClick = () => {
@@ -46,7 +46,7 @@ const Header = () => {
           <p className="header__link-text">Home</p>
         </Link>
         <Link
-          to="/projects/web-applications"
+          to="/projects"
           className={`header__link ${
             activeRoute === "projects" ? "header__link-focus" : ""
           }`}

@@ -1,8 +1,11 @@
 const BASE_URL = "http://localhost:3001";
 
-const handleResponse = (res) => {
+const handleResponse = async (res) => {
+  // console.log(res);
+
   if (res.ok) {
-    return res.json();
+    const text = await res.text();
+    return text ? JSON.parse(text) : null; // or null, depending on your use case
   } else {
     return Promise.reject(`Error: ${res.status}`);
   }
@@ -47,19 +50,38 @@ const signUpUser = ({ name, email, password }) => {
   }).then((res) => handleResponse(res));
 };
 
-const editUser = ({ name, email, profession, resume, about }, token) => {
+const editUser = (
+  { name, avatar, email, profession, resume, about },
+  token
+) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ name, email, profession, resumeUrl: resume, about }),
+    body: JSON.stringify({
+      name,
+      avatar,
+      email,
+      profession,
+      resumeUrl: resume,
+      about,
+    }),
   }).then((res) => handleResponse(res));
 };
 
 const getUploadUrl = () => {
   return fetch(`${BASE_URL}/users/upload-url`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+  }).then((res) => handleResponse(res));
+};
+
+const getDeleteUrl = (url) => {
+  return fetch(`${BASE_URL}/users/delete-url/${url}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -74,6 +96,12 @@ const uploadPhoto = (file, uploadUrl) => {
       "Content-Type": file.type,
     },
     body: file,
+  }).then((res) => handleResponse(res));
+};
+
+const deletePhoto = (deleteUrl) => {
+  return fetch(deleteUrl, {
+    method: "DELETE",
   }).then((res) => handleResponse(res));
 };
 
@@ -98,6 +126,20 @@ const updateUserInfo = (
   }).then((res) => handleResponse(res));
 };
 
+const addProject = (
+  { type, title, description, url, videoUrl, image },
+  token
+) => {
+  return fetch(`${BASE_URL}/projects`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ type, title, description, url, videoUrl, image }),
+  }).then((res) => handleResponse(res));
+};
+
 export {
   getProjects,
   confirmUser,
@@ -107,4 +149,7 @@ export {
   getUploadUrl,
   uploadPhoto,
   updateUserInfo,
+  getDeleteUrl,
+  deletePhoto,
+  addProject,
 };
