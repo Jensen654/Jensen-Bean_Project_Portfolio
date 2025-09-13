@@ -140,6 +140,17 @@ const addProject = (
   }).then((res) => handleResponse(res));
 };
 
+const deleteProject = ({ token, projectId }) => {
+  return fetch(`${BASE_URL}/projects`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ projectId }),
+  }).then((res) => handleResponse(res));
+};
+
 export {
   getProjects,
   confirmUser,
@@ -152,4 +163,5 @@ export {
   getDeleteUrl,
   deletePhoto,
   addProject,
+  deleteProject,
 };

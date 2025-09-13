@@ -24,11 +24,13 @@ import {
   getDeleteUrl,
   deletePhoto,
   addProject,
+  deleteProject,
 } from "../utils/api.js";
 import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
 import EditProfileModal from "./EditProfileModal.jsx";
 import AddProjectModal from "./AddProjectModal.jsx";
+import AreYouSureModal from "./AreYouSureModal.jsx";
 import Menu from "./Menu.jsx";
 import { acceptedImageTypes } from "../utils/constants.js";
 import PerformanceProjects from "./PerformanceProjects.jsx";
@@ -48,6 +50,7 @@ function App() {
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [selectedProject, setSelectedProject] = useState("");
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -65,7 +68,6 @@ function App() {
         })
         .catch((err) => {
           console.error("Error checking token:", err);
-          // localStorage.removeItem("jwt");
         });
     }
   }, []);
@@ -113,7 +115,6 @@ function App() {
         setIsUserLoggedIn(true);
         localStorage.setItem("jwt", token);
         handleCloseModal();
-        // console.log(token);
 
         setCurrentUser({
           name: user.name,
@@ -144,11 +145,9 @@ function App() {
       handleDeletePhoto();
     }
     if (file?.size > 3 * 1024 * 1024) {
-      // 3MB limit
       alert("Either your file is too big or not the right type!");
       return;
     }
-    // console.log(file.type);
 
     const { uploadUrl, key } = await getUploadUrl();
     const newAvatarUrl = `https://myimagedatabasejensenbean.s3.us-east-2.amazonaws.com/${key}`;
@@ -161,15 +160,10 @@ function App() {
   };
 
   const handleUploadProjectImage = async (file) => {
-    // if (currentUser.avatar.length > 0 || currentUser.avatar.length === 0) {
-    //   handleDeletePhoto();
-    // }
     if (file?.size > 3 * 1024 * 1024) {
-      // 3MB limit
       alert("Either your file is too big or not the right type!");
       return;
     }
-    // console.log(file.type);
 
     const { uploadUrl, key } = await getUploadUrl();
     const newProjectImageUrl = `https://myimagedatabasejensenbean.s3.us-east-2.amazonaws.com/${key}`;
@@ -185,7 +179,6 @@ function App() {
     const { deleteUrl } = await getDeleteUrl(
       encodeURIComponent(currentUser.avatar)
     );
-    // console.log(deleteUrl);
 
     await deletePhoto(deleteUrl).catch((err) => {
       console.error("Error deleting file:", err);
@@ -234,9 +227,25 @@ function App() {
     });
   };
 
+  const handleDeleteProject = async (projectId) => {
+    await deleteProject({ token: localStorage.getItem("jwt"), projectId })
+      .then(() => {
+        setProjects(projects.filter((p) => p._id !== projectId));
+        handleCloseModal();
+      })
+      .catch((err) => console.error);
+  };
+
   return (
     <UserDataContext.Provider value={{ currentUser, isUserLoggedIn }}>
-      <ProjectDataContext.Provider value={{ projects }}>
+      <ProjectDataContext.Provider
+        value={{
+          projects,
+          selectedProject,
+          setSelectedProject,
+          handleDeleteProject,
+        }}
+      >
         <PageDataContext.Provider
           value={{
             activeRoute,
@@ -285,6 +294,10 @@ function App() {
             handleCloseModal={handleCloseModal}
             handleSubmit={handleProjectSubmit}
             handleUploadProjectImage={handleUploadProjectImage}
+          />
+          <AreYouSureModal
+            isOpen={activeModal === "are-you-sure"}
+            handleCloseModal={handleCloseModal}
           />
         </PageDataContext.Provider>
       </ProjectDataContext.Provider>

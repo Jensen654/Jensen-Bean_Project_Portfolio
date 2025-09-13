@@ -2,6 +2,9 @@ import "../blocks/ProjectDisplay.css";
 import PageDataContext from "../contexts/PageDataContext";
 import { useContext } from "react";
 import OpenNewTab from "../assets/icons8-new-tab.svg";
+import UserDataContext from "../contexts/UserDataContext";
+import trashCanPic from "../assets/reshot-icon-trash-ZQRFC2LJXU.svg";
+import ProjectDataContext from "../contexts/ProjectDataContext";
 
 const ProjectDisplay = ({
   project,
@@ -9,7 +12,10 @@ const ProjectDisplay = ({
   projectDescription,
   projectUrl,
 }) => {
-  const { buttonPressed, setButtonPressed } = useContext(PageDataContext);
+  const { buttonPressed, setButtonPressed, setActiveModal } =
+    useContext(PageDataContext);
+  const { isUserLoggedIn } = useContext(UserDataContext);
+  const { setSelectedProject } = useContext(ProjectDataContext);
 
   function getYouTubeEmbedUrl(url) {
     if (typeof url !== "string") return null; // <-- Add this line
@@ -32,8 +38,18 @@ const ProjectDisplay = ({
     }));
   };
 
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+    setActiveModal("are-you-sure");
+    handleProjectDisplayClick();
+  };
+
+  const handleProjectDisplayClick = () => {
+    setSelectedProject(project);
+  };
+
   return (
-    <section className="project-display">
+    <section onClick={handleProjectDisplayClick} className="project-display">
       <div className="project-display__intro" onClick={handleDropDownClick}>
         <h2 className="project-display__title">{projectTitle}</h2>
         <button
@@ -56,6 +72,18 @@ const ProjectDisplay = ({
             </g>
           </svg>
         </button>
+        {isUserLoggedIn && (
+          <button
+            className="project-display__trash-button"
+            onClick={handleDeleteClick}
+          >
+            <img
+              className="project-display__trash-image"
+              src={trashCanPic}
+              alt="Trash Can Picture"
+            />
+          </button>
+        )}
       </div>
       <div
         className={`project-display__details ${

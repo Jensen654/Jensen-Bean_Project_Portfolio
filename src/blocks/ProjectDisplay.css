@@ -16,6 +16,7 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
+  position: relative;
 }
 
 .project-display__title {
@@ -26,6 +27,25 @@
   width: 40px;
   height: 40px;
   color: #1d2b38;
+}
+
+.project-display__trash-button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  position: absolute;
+  right: 3%;
+  cursor: pointer;
+  transition: scale 30ms linear;
+}
+
+.project-display__trash-button:hover {
+  scale: 1.2;
+  transition: scale 30ms linear;
+}
+
+.project-display__trash-image {
+  width: 30px;
 }
 
 .project-display__details {
