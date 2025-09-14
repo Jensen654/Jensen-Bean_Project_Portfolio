@@ -34,6 +34,7 @@ import AreYouSureModal from "./AreYouSureModal.jsx";
 import Menu from "./Menu.jsx";
 import { acceptedImageTypes } from "../utils/constants.js";
 import PerformanceProjects from "./PerformanceProjects.jsx";
+import { DefaultProjects } from "../utils/constants.js";
 
 function App() {
   const [activeRoute, setActiveRoute] = useState("");
@@ -73,17 +74,26 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetchProjects(localStorage.getItem("jwt"));
+    if (currentUser.name.length > 0) fetchProjects(localStorage.getItem("jwt"));
   }, [currentUser]);
 
   const fetchProjects = async (userId) => {
     try {
       const projects = await getProjects(userId);
+      console.log(projects);
+
       setProjects(projects);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    const subRoutes = projects.map((project) => project.type);
+    const
+
+    setActiveSubRoute(subRoutes[0]);
+  }, [projects]);
 
   const handleCloseModal = () => {
     setActiveModal("");

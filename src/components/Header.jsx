@@ -33,7 +33,7 @@ const Header = () => {
       <p className="header__logo">
         {typeof currentUser.name === "string" && currentUser.name.length > 0
           ? currentUser.name
-          : "Your Name Here"}
+          : "Your Mom"}
       </p>
       <div className="header__links">
         <Link

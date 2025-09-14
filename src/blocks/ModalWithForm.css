@@ -114,6 +114,7 @@
   cursor: pointer;
   padding: 10px;
   align-self: center;
+  border: 1px solid;
 }
 
 .modal__form_submit:hover {

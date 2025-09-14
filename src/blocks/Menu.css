@@ -40,3 +40,7 @@
   background-color: #d4d7c3;
   cursor: pointer;
 }
+
+.menu__item_delete {
+  color: red;
+}

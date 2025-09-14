@@ -4,6 +4,7 @@ import PageDataContext from "../contexts/PageDataContext";
 import UserDataContext from "../contexts/UserDataContext";
 import ProjectDataContext from "../contexts/ProjectDataContext";
 import { useContext } from "react";
+import { DefaultProjects } from "../utils/constants";
 
 const Projects = () => {
   const { activeSubRoute, setActiveSubRoute, setActiveModal } =
@@ -36,45 +37,87 @@ const Projects = () => {
         </button>
       )}
       <nav className="project__nav">
-        {projects.find((p) => p.type === "tech") && (
-          <Link
-            onClick={clickWebApps}
-            className={`project__nav-link ${
-              activeSubRoute === "tech-projects"
-                ? "project__nav-link-focus"
-                : ""
-            }`}
-            to="/projects/tech-projects"
-          >
-            Tech
-          </Link>
-        )}
-        {projects.find((p) => p.type === "performance") && (
-          <Link
-            onClick={clickPerformanceProjects}
-            className={`project__nav-link ${
-              activeSubRoute === "performance-projects"
-                ? "project__nav-link-focus"
-                : ""
-            }`}
-            to="/projects/performance-projects"
-          >
-            Performance
-          </Link>
-        )}
-        {projects.find((p) => p.type === "other") && (
-          <Link
-            onClick={clickOtherProjects}
-            className={`project__nav-link ${
-              activeSubRoute === "other-projects"
-                ? "project__nav-link-focus"
-                : ""
-            }`}
-            to="/projects/other-projects"
-          >
-            Other
-          </Link>
-        )}
+        {projects.length > 0
+          ? projects.find((p) => p.type === "tech") && (
+              <Link
+                onClick={clickWebApps}
+                className={`project__nav-link ${
+                  activeSubRoute === "tech-projects"
+                    ? "project__nav-link-focus"
+                    : ""
+                }`}
+                to="/projects/tech-projects"
+              >
+                Tech
+              </Link>
+            )
+          : DefaultProjects.find((p) => p.type === "tech") && (
+              <Link
+                onClick={clickWebApps}
+                className={`project__nav-link ${
+                  activeSubRoute === "tech-projects"
+                    ? "project__nav-link-focus"
+                    : ""
+                }`}
+                to="/projects/tech-projects"
+              >
+                Tech
+              </Link>
+            )}
+        {projects.length > 0
+          ? projects.find((p) => p.type === "performance") && (
+              <Link
+                onClick={clickPerformanceProjects}
+                className={`project__nav-link ${
+                  activeSubRoute === "performance-projects"
+                    ? "project__nav-link-focus"
+                    : ""
+                }`}
+                to="/projects/performance-projects"
+              >
+                Performance
+              </Link>
+            )
+          : DefaultProjects.find((p) => p.type === "performance") && (
+              <Link
+                onClick={clickPerformanceProjects}
+                className={`project__nav-link ${
+                  activeSubRoute === "performance-projects"
+                    ? "project__nav-link-focus"
+                    : ""
+                }`}
+                to="/projects/performance-projects"
+              >
+                Performance
+              </Link>
+            )}
+        {projects.length > 0
+          ? projects.find((p) => p.type === "other") && (
+              <Link
+                onClick={clickOtherProjects}
+                className={`project__nav-link ${
+                  activeSubRoute === "other-projects"
+                    ? "project__nav-link-focus"
+                    : ""
+                }`}
+                to="/projects/other-projects"
+              >
+                Other
+              </Link>
+            )
+          : DefaultProjects.find((p) => p.type === "other") && (
+              <Link
+                onClick={clickOtherProjects}
+                className={`project__nav-link ${
+                  activeSubRoute === "other-projects"
+                    ? "project__nav-link-focus"
+                    : ""
+                }`}
+                to="/projects/other-projects"
+              >
+                Other
+              </Link>
+            )}
       </nav>
       <Outlet />
     </div>

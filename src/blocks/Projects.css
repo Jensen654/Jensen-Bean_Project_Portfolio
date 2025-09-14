@@ -22,3 +22,6 @@
 .project__nav-link-focus {
   border-bottom: 1px solid #1d2b38;
 }
+
+.project__nav-link:nth-of-type {
+}

@@ -62,8 +62,8 @@ const EditProfileModal = ({
 
   return (
     <ModalWithForm
-      title="Edit Profile"
-      buttonText="Save Changes"
+      title="Add Project"
+      buttonText="Add Project"
       isOpen={activeModal === "add-project"}
       handleCloseClick={handleCloseModal}
       handleSubmit={handleSubmitForm}

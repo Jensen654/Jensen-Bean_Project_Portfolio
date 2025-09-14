@@ -25,7 +25,7 @@ const Home = () => {
         <div className="home__intro-container">
           <h2 className="home__intro-hello home__intro-text">Hello.</h2>
           <h3 className="home__intro-name home__intro-text">
-            I'm {currentUser.name},
+            I'm {currentUser.name.length > 0 ? currentUser.name : "Your Mom"},
           </h3>
           <h3 className="home__intro-title home__intro-text">
             {currentUser.profession || "A Silly Billy"}.
@@ -92,7 +92,11 @@ const Home = () => {
           easier. Now I'm on the search for a job where I can blend my
           creativity with problem solving!
         </p> */}
-        <p>{currentUser.about}</p>
+        <p>
+          {currentUser.about.length > 0
+            ? currentUser.about
+            : "This user prefers to keep an air of mystery about them."}
+        </p>
       </section>
     </div>
   );
