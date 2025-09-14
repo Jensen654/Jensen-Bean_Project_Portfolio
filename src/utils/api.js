@@ -11,11 +11,12 @@ const handleResponse = async (res) => {
   }
 };
 
-const getProjects = () => {
+const getProjects = (token) => {
   return fetch(`${BASE_URL}/projects`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   }).then((res) => handleResponse(res));
 };

@@ -5,6 +5,7 @@
   justify-self: center;
   width: 100%;
   gap: 10px;
+  margin: 0 auto;
 }
 
 .contact-me__label {

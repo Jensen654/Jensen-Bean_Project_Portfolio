@@ -73,12 +73,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetchProjects();
-  }, []);
+    fetchProjects(localStorage.getItem("jwt"));
+  }, [currentUser]);
 
-  const fetchProjects = async () => {
+  const fetchProjects = async (userId) => {
     try {
-      const projects = await getProjects();
+      const projects = await getProjects(userId);
       setProjects(projects);
     } catch (error) {
       console.error(error);
