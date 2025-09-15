@@ -11,16 +11,7 @@ const handleResponse = async (res) => {
   }
 };
 
-const getProjects = (token) => {
-  return fetch(`${BASE_URL}/projects`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((res) => handleResponse(res));
-};
-
+//User Stuff
 const confirmUser = (token) => {
   return fetch(`${BASE_URL}/users/confirm`, {
     method: "GET",
@@ -72,6 +63,64 @@ const editUser = (
   }).then((res) => handleResponse(res));
 };
 
+const updateUserInfo = (
+  { name, avatar, email, profession, resume, about },
+  token
+) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      name,
+      avatar,
+      email,
+      profession,
+      resumeUrl: resume,
+      about,
+    }),
+  }).then((res) => handleResponse(res));
+};
+
+// Projects Stuff
+const getProjects = (token) => {
+  return fetch(`${BASE_URL}/projects`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => handleResponse(res));
+};
+
+const addProject = (
+  { type, title, description, url, videoUrl, image },
+  token
+) => {
+  return fetch(`${BASE_URL}/projects`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ type, title, description, url, videoUrl, image }),
+  }).then((res) => handleResponse(res));
+};
+
+const deleteProject = ({ token, projectId }) => {
+  return fetch(`${BASE_URL}/projects`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ projectId }),
+  }).then((res) => handleResponse(res));
+};
+
+//Amazon Web Service Stuff
 const getUploadUrl = () => {
   return fetch(`${BASE_URL}/users/upload-url`, {
     method: "GET",
@@ -103,52 +152,6 @@ const uploadPhoto = (file, uploadUrl) => {
 const deletePhoto = (deleteUrl) => {
   return fetch(deleteUrl, {
     method: "DELETE",
-  }).then((res) => handleResponse(res));
-};
-
-const updateUserInfo = (
-  { name, avatar, email, profession, resume, about },
-  token
-) => {
-  return fetch(`${BASE_URL}/users/me`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      name,
-      avatar,
-      email,
-      profession,
-      resumeUrl: resume,
-      about,
-    }),
-  }).then((res) => handleResponse(res));
-};
-
-const addProject = (
-  { type, title, description, url, videoUrl, image },
-  token
-) => {
-  return fetch(`${BASE_URL}/projects`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ type, title, description, url, videoUrl, image }),
-  }).then((res) => handleResponse(res));
-};
-
-const deleteProject = ({ token, projectId }) => {
-  return fetch(`${BASE_URL}/projects`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ projectId }),
   }).then((res) => handleResponse(res));
 };
 

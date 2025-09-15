@@ -6,8 +6,13 @@ import { useContext } from "react";
 import MenuSvg from "../assets/menu-icon.svg";
 
 const Header = () => {
-  const { activeRoute, setActiveRoute, setActiveSubRoute, setMenuOpen } =
-    useContext(PageDataContext);
+  const {
+    activeRoute,
+    setActiveRoute,
+    activeSubRoute,
+    setActiveSubRoute,
+    setMenuOpen,
+  } = useContext(PageDataContext);
   const { currentUser, setCurrentUser, setIsUserLoggedIn } =
     useContext(UserDataContext);
 
@@ -46,7 +51,7 @@ const Header = () => {
           <p className="header__link-text">Home</p>
         </Link>
         <Link
-          to="/projects"
+          to={`/projects/${activeSubRoute}`}
           className={`header__link ${
             activeRoute === "projects" ? "header__link-focus" : ""
           }`}

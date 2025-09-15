@@ -63,12 +63,13 @@
 }
 
 .home__intro-image {
-  width: 100%;
   max-width: 400px;
   height: auto;
+  max-height: 600px;
   border-radius: 50px;
   box-shadow: 10px 10px 15px #373636;
   margin: 2vh 0;
+  object-fit: contain;
 }
 
 .home__intro-button {

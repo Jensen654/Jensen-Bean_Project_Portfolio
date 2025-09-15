@@ -80,7 +80,6 @@ function App() {
   const fetchProjects = async (userId) => {
     try {
       const projects = await getProjects(userId);
-      console.log(projects);
 
       setProjects(projects);
     } catch (error) {
@@ -90,9 +89,13 @@ function App() {
 
   useEffect(() => {
     const subRoutes = projects.map((project) => project.type);
-    const
+    const defaultSubRoutes = DefaultProjects.map((project) => project.type);
 
-    setActiveSubRoute(subRoutes[0]);
+    if (subRoutes.length > 0) {
+      setActiveSubRoute(`${subRoutes[0]}-projects`);
+    } else {
+      setActiveSubRoute(`${defaultSubRoutes[0]}-projects`);
+    }
   }, [projects]);
 
   const handleCloseModal = () => {
@@ -237,13 +240,29 @@ function App() {
     });
   };
 
-  const handleDeleteProject = async (projectId) => {
-    await deleteProject({ token: localStorage.getItem("jwt"), projectId })
-      .then(() => {
-        setProjects(projects.filter((p) => p._id !== projectId));
-        handleCloseModal();
-      })
-      .catch((err) => console.error);
+  const handleDeleteProject = async ({ projectId, pictureUrl }) => {
+    if (pictureUrl) {
+      const { deleteUrl } = await getDeleteUrl(pictureUrl);
+      await deletePhoto(deleteUrl)
+        .then((res) => {
+          if (res.ok) {
+            deleteProject({ token: localStorage.getItem("jwt"), projectId })
+              .then(() => {
+                setProjects(projects.filter((p) => p._id !== projectId));
+                handleCloseModal();
+              })
+              .catch(() => console.error);
+          }
+        })
+        .catch(() => console.error);
+    } else {
+      await deleteProject({ token: localStorage.getItem("jwt"), projectId })
+        .then(() => {
+          setProjects(projects.filter((p) => p._id !== projectId));
+          handleCloseModal();
+        })
+        .catch(() => console.error);
+    }
   };
 
   return (

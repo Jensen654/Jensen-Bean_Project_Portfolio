@@ -16,7 +16,10 @@ const AreYouSureModal = ({ isOpen, handleCloseModal }) => {
 
   const handleDeleteClick = (e) => {
     e.preventDefault();
-    handleDeleteProject(selectedProject._id);
+    handleDeleteProject({
+      projectId: selectedProject._id,
+      picturnUrl: selectedProject.avatar,
+    });
   };
 
   return (

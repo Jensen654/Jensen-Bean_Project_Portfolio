@@ -42,12 +42,13 @@ const EditProfileModal = ({
     setProjectType(e.target.id);
   };
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
+    let returnImageUrl;
 
     if (projectImage) {
-      handleUploadProjectImage(projectImage).then((data) => {
-        handleSubmit({ image: data });
+      await handleUploadProjectImage(projectImage).then((data) => {
+        returnImageUrl = data;
       });
     }
 
@@ -57,6 +58,7 @@ const EditProfileModal = ({
       description: projectDescription,
       url: projectUrl,
       videoUrl: projectVideo,
+      image: returnImageUrl,
     });
   };
 
