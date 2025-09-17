@@ -1,10 +1,13 @@
 import "../blocks/ModalWithForm.css";
 import { useContext } from "react";
 import ProjectDataContext from "../contexts/ProjectDataContext";
+import PageDataContext from "../contexts/PageDataContext";
 
-const AreYouSureModal = ({ isOpen, handleCloseModal }) => {
+const AreYouSureModal = ({ isOpen, handleSubmit }) => {
   const { handleDeleteProject, selectedProject } =
     useContext(ProjectDataContext);
+
+  const { handleCloseModal } = useContext(PageDataContext);
 
   const handleCloseModalNow = () => {
     handleCloseModal();

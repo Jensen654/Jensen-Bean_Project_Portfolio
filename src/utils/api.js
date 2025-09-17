@@ -84,6 +84,17 @@ const updateUserInfo = (
   }).then((res) => handleResponse(res));
 };
 
+const deleteUserProfile = ({ userId, token }) => {
+  return fetch(BASE_URL, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(userId),
+  }).then((res) => handleResponse(res));
+};
+
 // Projects Stuff
 const getProjects = (token) => {
   return fetch(`${BASE_URL}/projects`, {
@@ -168,4 +179,5 @@ export {
   deletePhoto,
   addProject,
   deleteProject,
+  deleteUserProfile,
 };

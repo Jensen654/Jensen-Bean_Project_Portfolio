@@ -25,6 +25,7 @@ import {
   deletePhoto,
   addProject,
   deleteProject,
+  deleteUserProfile,
 } from "../utils/api.js";
 import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
@@ -48,6 +49,7 @@ function App() {
     profession: "",
     about: "",
     resume: "",
+    id: "",
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -150,6 +152,7 @@ function App() {
       about: "",
       resume: "",
     });
+    setProjects([]);
     setMenuOpen(false);
   };
 
@@ -265,6 +268,10 @@ function App() {
     }
   };
 
+  const handleDeleteProfile = async (userId) => {
+    await deleteUserProfile({ userId, token: localStorage.getItem("jwt") });
+  };
+
   return (
     <UserDataContext.Provider value={{ currentUser, isUserLoggedIn }}>
       <ProjectDataContext.Provider
@@ -287,6 +294,7 @@ function App() {
             setActiveModal,
             setMenuOpen,
             menuOpen,
+            handleCloseModal,
           }}
         >
           <div className="page">
