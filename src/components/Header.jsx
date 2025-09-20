@@ -4,17 +4,16 @@ import PageDataContext from "../contexts/PageDataContext.js";
 import UserDataContext from "../contexts/UserDataContext.js";
 import { useContext } from "react";
 import MenuSvg from "../assets/menu-icon.svg";
+import PublicDataContext from "../contexts/PublicDataContext.js";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
-  const {
-    activeRoute,
-    setActiveRoute,
-    activeSubRoute,
-    setActiveSubRoute,
-    setMenuOpen,
-  } = useContext(PageDataContext);
-  const { currentUser, setCurrentUser, setIsUserLoggedIn } =
+  const location = useLocation();
+  const { activeRoute, setActiveRoute, activeSubRoute, setMenuOpen } =
+    useContext(PageDataContext);
+  const { currentUser, showContactMeInfo, isUserLoggedIn } =
     useContext(UserDataContext);
+  const { publicUserName, publicUser } = useContext(PublicDataContext);
 
   const handleHomeClick = () => {
     setActiveRoute("home");
@@ -22,7 +21,6 @@ const Header = () => {
 
   const handleProjectsClick = () => {
     setActiveRoute("projects");
-    // setActiveSubRoute("tech-projects");
   };
 
   const handleContactMeClick = () => {
@@ -35,14 +33,29 @@ const Header = () => {
 
   return (
     <header className="header">
-      <p className="header__logo">
+      {/* <p className="header__logo">
         {typeof currentUser.name === "string" && currentUser.name.length > 0
           ? currentUser.name
           : "Your Mom"}
-      </p>
+      </p> */}
+      <Link
+        to={`${currentUser.userName}/`}
+        className={`header__link ${
+          location.pathname.includes(currentUser.userName)
+            ? "header__link-focus"
+            : ""
+        }`}
+        onClick={handleHomeClick}
+      >
+        <p className="header__logo">
+          {typeof currentUser.name === "string" && currentUser.name.length > 0
+            ? currentUser.name
+            : "Your Mom"}
+        </p>
+      </Link>
       <div className="header__links">
         <Link
-          to="/"
+          to={`${publicUserName}/`}
           className={`header__link ${
             activeRoute === "home" ? "header__link-focus" : ""
           }`}
@@ -51,7 +64,7 @@ const Header = () => {
           <p className="header__link-text">Home</p>
         </Link>
         <Link
-          to={`/projects/${activeSubRoute}`}
+          to={`${publicUserName}/projects/${activeSubRoute}`}
           className={`header__link ${
             activeRoute === "projects" ? "header__link-focus" : ""
           }`}
@@ -59,15 +72,28 @@ const Header = () => {
         >
           <p className="header__link-text">Projects</p>
         </Link>
-        <Link
-          to="/contactMe"
-          className={`header__link ${
-            activeRoute === "contactMe" ? "header__link-focus" : ""
-          }`}
-          onClick={handleContactMeClick}
-        >
-          <p className="header__link-text">Contact Me</p>
-        </Link>
+        {showContactMeInfo && (
+          <Link
+            to={`${publicUserName}/contactMe`}
+            className={`header__link ${
+              activeRoute === "contactMe" ? "header__link-focus" : ""
+            }`}
+            onClick={handleContactMeClick}
+          >
+            <p className="header__link-text">Contact Me</p>
+          </Link>
+        )}
+        {/* {!isUserLoggedIn && (
+          <Link
+            to={`${publicUserName}/contactMe`}
+            className={`header__link ${
+              activeRoute === "contactMe" ? "header__link-focus" : ""
+            }`}
+            onClick={handleContactMeClick}
+          >
+            <p className="header__link-text">Contact Me</p>
+          </Link>
+        )} */}
         <button
           className={`header__link header__signup-button`}
           onClick={handleMenuClick}

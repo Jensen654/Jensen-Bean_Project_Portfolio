@@ -3,14 +3,24 @@ import "../blocks/Projects.css";
 import PageDataContext from "../contexts/PageDataContext";
 import UserDataContext from "../contexts/UserDataContext";
 import ProjectDataContext from "../contexts/ProjectDataContext";
-import { useContext } from "react";
+import PublicDataContext from "../contexts/PublicDataContext";
+import { useContext, useEffect } from "react";
 import { DefaultProjects } from "../utils/constants";
+import AreYouSureModal from "./AreYouSureModal";
+import { useParams } from "react-router-dom";
 
-const Projects = () => {
-  const { activeSubRoute, setActiveSubRoute, setActiveModal } =
+const Projects = ({ handleSubmit }) => {
+  const { activeSubRoute, setActiveSubRoute, activeModal, setActiveModal } =
     useContext(PageDataContext);
   const { isUserLoggedIn } = useContext(UserDataContext);
-  const { projects } = useContext(ProjectDataContext);
+  const { projects, selectedProject } = useContext(ProjectDataContext);
+  const { isOwner, setPublicUserName, publicUserName } =
+    useContext(PublicDataContext);
+  const { userName } = useParams();
+
+  useEffect(() => {
+    setPublicUserName(userName);
+  }, [userName]);
 
   const handleAddProjectClick = () => {
     setActiveModal("add-project");
@@ -26,15 +36,28 @@ const Projects = () => {
     setActiveSubRoute("performance-projects");
   };
 
+  const submitDeleteProject = () => {
+    handleSubmit({
+      projectId: selectedProject._id,
+      pictureUrl: selectedProject.avatar,
+    });
+  };
+
   return (
     <div className="projects">
-      {isUserLoggedIn && (
+      <AreYouSureModal
+        isOpen={activeModal === "are-you-sure"}
+        handleSubmit={submitDeleteProject}
+      />
+      {isUserLoggedIn && isOwner ? (
         <button
           className="home__edit-profile-button"
           onClick={handleAddProjectClick}
         >
           Add Project
         </button>
+      ) : (
+        ""
       )}
       <nav className="project__nav">
         {projects.length > 0
@@ -46,7 +69,7 @@ const Projects = () => {
                     ? "project__nav-link-focus"
                     : ""
                 }`}
-                to="/projects/tech-projects"
+                to={`/${publicUserName}/projects/tech-projects`}
               >
                 Tech
               </Link>
@@ -59,7 +82,7 @@ const Projects = () => {
                     ? "project__nav-link-focus"
                     : ""
                 }`}
-                to="/projects/tech-projects"
+                to={`/${publicUserName}/projects/tech-projects`}
               >
                 Tech
               </Link>
@@ -73,7 +96,7 @@ const Projects = () => {
                     ? "project__nav-link-focus"
                     : ""
                 }`}
-                to="/projects/performance-projects"
+                to={`/${publicUserName}/projects/performance-projects`}
               >
                 Performance
               </Link>
@@ -86,7 +109,7 @@ const Projects = () => {
                     ? "project__nav-link-focus"
                     : ""
                 }`}
-                to="/projects/performance-projects"
+                to={`/${publicUserName}/projects/performance-projects`}
               >
                 Performance
               </Link>
@@ -100,7 +123,7 @@ const Projects = () => {
                     ? "project__nav-link-focus"
                     : ""
                 }`}
-                to="/projects/other-projects"
+                to={`/${publicUserName}/projects/other-projects`}
               >
                 Other
               </Link>
@@ -113,7 +136,7 @@ const Projects = () => {
                     ? "project__nav-link-focus"
                     : ""
                 }`}
-                to="/projects/other-projects"
+                to={`/${publicUserName}/projects/other-projects`}
               >
                 Other
               </Link>

@@ -1,11 +1,20 @@
 import "../blocks/Home.css";
 import UserDataContext from "../contexts/UserDataContext";
 import PageDataContext from "../contexts/PageDataContext";
-import { useContext } from "react";
+import PublicDataContext from "../contexts/PublicDataContext";
+import { useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const Home = () => {
   const { currentUser, isUserLoggedIn } = useContext(UserDataContext);
   const { setActiveModal } = useContext(PageDataContext);
+  const { setPublicUserName, publicUser, isOwner } =
+    useContext(PublicDataContext);
+  const { userName } = useParams();
+
+  useEffect(() => {
+    setPublicUserName(userName);
+  }, [userName]);
 
   const handleEditProfileClick = () => {
     setActiveModal("editProfile");
@@ -13,24 +22,26 @@ const Home = () => {
 
   return (
     <div className="home">
-      {isUserLoggedIn && (
+      {isUserLoggedIn && isOwner ? (
         <button
           className="home__edit-profile-button"
           onClick={handleEditProfileClick}
         >
           Edit Profile Info
         </button>
+      ) : (
+        <></>
       )}
       <section className="home__intro">
         <div className="home__intro-container">
           <h2 className="home__intro-hello home__intro-text">Hello.</h2>
           <h3 className="home__intro-name home__intro-text">
-            I'm {currentUser.name.length > 0 ? currentUser.name : "Your Mom"},
+            I'm {publicUser.name.length > 0 ? publicUser.name : "Your Mom"},
           </h3>
           <h3 className="home__intro-title home__intro-text">
-            {currentUser.profession || "A Silly Billy"}.
+            {publicUser.profession || "A Silly Billy"}.
           </h3>
-          {currentUser.resume && (
+          {publicUser.resume && (
             <a
               href="https://docs.google.com/document/d/1ttmiTIirAoEtwlR0YB-zaiEdHdZxEVyyzoMn3SOeIjg/edit?usp=sharing"
               target="#"
@@ -44,10 +55,10 @@ const Home = () => {
           className="home__intro-image"
           // src="src/assets/JensenHeadshot.JPG"
           src={
-            currentUser.avatar ||
+            publicUser.avatar ||
             "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-profile-picture-business-profile-woman-suitable-social-media-profiles-icons-screensavers-as-templatex9_719432-1351.jpg?semt=ais_hybrid&w=740&q=80"
           }
-          alt={currentUser.name}
+          alt={publicUser.name}
         />
       </section>
       <section className="home__about">
@@ -93,9 +104,9 @@ const Home = () => {
           creativity with problem solving!
         </p> */}
         <p>
-          {currentUser.about.length > 0
-            ? currentUser.about
-            : "This user prefers to keep an air of mystery about them."}
+          {publicUser.about.length > 0
+            ? publicUser.about
+            : "This here could be about your beautiful face (˘ε˘˶ )"}
         </p>
       </section>
     </div>

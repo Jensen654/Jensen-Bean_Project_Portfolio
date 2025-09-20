@@ -2,11 +2,12 @@ import "../blocks/ModalWithForm.css";
 import { useContext } from "react";
 import ProjectDataContext from "../contexts/ProjectDataContext";
 import PageDataContext from "../contexts/PageDataContext";
+import UserDataContext from "../contexts/UserDataContext";
 
 const AreYouSureModal = ({ isOpen, handleSubmit }) => {
   const { handleDeleteProject, selectedProject } =
     useContext(ProjectDataContext);
-
+  const { currentUser } = useContext(UserDataContext);
   const { handleCloseModal } = useContext(PageDataContext);
 
   const handleCloseModalNow = () => {
@@ -19,10 +20,11 @@ const AreYouSureModal = ({ isOpen, handleSubmit }) => {
 
   const handleDeleteClick = (e) => {
     e.preventDefault();
-    handleDeleteProject({
-      projectId: selectedProject._id,
-      picturnUrl: selectedProject.avatar,
-    });
+    // handleDeleteProject({
+    //   projectId: selectedProject._id,
+    //   picturnUrl: selectedProject.avatar,
+    // });
+    handleSubmit(currentUser.id);
   };
 
   return (

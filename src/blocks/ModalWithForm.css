@@ -33,6 +33,7 @@
   border-radius: 20px;
   width: 100%;
   overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .modal__content_type_image {
@@ -42,7 +43,7 @@
 }
 
 .modal__form {
-  margin: 28px;
+  margin: 40px;
   display: flex;
   flex-direction: column;
   gap: 20px;

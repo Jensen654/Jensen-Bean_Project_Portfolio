@@ -11,20 +11,37 @@ const EditProfileModal = ({
   const { activeModal } = useContext(PageDataContext);
   const { currentUser } = useContext(UserDataContext);
 
-  const [email, setEmail] = useState(currentUser.email);
-  //   const [password, setPassword] = useState(currentUser.password);
-  const [name, setName] = useState(currentUser.name);
-  const [profession, setProfession] = useState(currentUser.profession);
-  const [resume, setResume] = useState(currentUser.resume);
-  const [about, setAbout] = useState(currentUser.about);
+  const [email, setEmail] = useState(currentUser?.email ?? "");
+  const [name, setName] = useState(currentUser?.name ?? "");
+  const [profession, setProfession] = useState(currentUser?.profession ?? "");
+  const [resume, setResume] = useState(currentUser?.resume ?? "");
+  const [about, setAbout] = useState(currentUser?.about ?? "");
   const [avatar, setAvatar] = useState(null);
+  const [phone, setPhone] = useState(currentUser?.phoneNumber ?? "");
+  const [showContactMe, setShowContactMe] = useState(
+    currentUser?.showContactMe ?? false
+  );
+
+  // useEffect(() => {
+  //   setEmail(currentUser.email);
+  //   setName(currentUser.name);
+  //   setProfession(currentUser.profession);
+  //   setResume(currentUser.resume);
+  //   setAbout(currentUser.about);
+  //   setPhone(currentUser.phoneNumber);
+  //   setShowContactMe(currentUser.showContactMe);
+  // }, [currentUser]);
 
   useEffect(() => {
-    setEmail(currentUser.email);
-    setName(currentUser.name);
-    setProfession(currentUser.profession);
-    setResume(currentUser.resume);
-    setAbout(currentUser.about);
+    if (currentUser) {
+      setEmail(currentUser.email ?? "");
+      setName(currentUser.name ?? "");
+      setProfession(currentUser.profession ?? "");
+      setResume(currentUser.resume ?? "");
+      setAbout(currentUser.about ?? "");
+      setPhone(currentUser.phoneNumber ?? "");
+      setShowContactMe(currentUser.showContactMe ?? false);
+    }
   }, [currentUser]);
 
   const handleNameChange = (e) => {
@@ -47,6 +64,15 @@ const EditProfileModal = ({
     setAbout(e.target.value);
   };
 
+  const handlePhoneNumberChange = (e) => {
+    setPhone(e.target.value);
+  };
+
+  const handleCheckBoxClick = (e) => {
+    setShowContactMe(!showContactMe);
+    console.log(showContactMe);
+  };
+
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
@@ -57,13 +83,16 @@ const EditProfileModal = ({
         });
       });
     }
+    console.log(phone);
 
     handleSubmit({
       name,
       email,
+      phoneNumber: phone,
       profession,
       resume,
       about,
+      showContactMe,
     });
   };
 
@@ -87,18 +116,6 @@ const EditProfileModal = ({
           required
         />
       </label>
-      {/* <label htmlFor="EditEmail" className="modal__label">
-        Email:
-        <input
-          id="EditEmail"
-          type="email"
-          name="email"
-          value={email}
-          onChange={handleEmailChange}
-          className="modal__input"
-          required
-        />
-      </label> */}
       <label htmlFor="EditProfession" className="modal__label">
         Profession:
         <input
@@ -107,6 +124,32 @@ const EditProfileModal = ({
           name="profession"
           value={profession}
           onChange={handleProfessionChange}
+          className="modal__input"
+          //   required
+        />
+      </label>
+      <label htmlFor="phone" className="modal__label">
+        Phone Number:
+        <input
+          id="phone"
+          type="text"
+          name="phone"
+          value={phone}
+          onChange={handlePhoneNumberChange}
+          className="modal__input"
+          //   required
+        />
+      </label>
+      <label htmlFor="ShowContactMe" className="modal__label">
+        Show Contact Info?
+        <input
+          checked={showContactMe}
+          id="ShowContactMe"
+          type="checkbox"
+          name="ShowContactMe"
+          // value={isChecked}
+          // onClick={handleCheckBoxClick}
+          onChange={handleCheckBoxClick}
           className="modal__input"
           //   required
         />

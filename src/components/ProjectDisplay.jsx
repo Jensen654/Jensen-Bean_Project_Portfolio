@@ -5,6 +5,8 @@ import OpenNewTab from "../assets/icons8-new-tab.svg";
 import UserDataContext from "../contexts/UserDataContext";
 import trashCanPic from "../assets/reshot-icon-trash-ZQRFC2LJXU.svg";
 import ProjectDataContext from "../contexts/ProjectDataContext";
+import PublicDataContext from "../contexts/PublicDataContext";
+import editPic from "../assets/edit.svg";
 
 const ProjectDisplay = ({
   project,
@@ -16,6 +18,7 @@ const ProjectDisplay = ({
     useContext(PageDataContext);
   const { isUserLoggedIn } = useContext(UserDataContext);
   const { setSelectedProject } = useContext(ProjectDataContext);
+  const { isOwner } = useContext(PublicDataContext);
 
   function getYouTubeEmbedUrl(url) {
     if (typeof url !== "string") return null; // <-- Add this line
@@ -51,6 +54,17 @@ const ProjectDisplay = ({
   return (
     <section onClick={handleProjectDisplayClick} className="project-display">
       <div className="project-display__intro" onClick={handleDropDownClick}>
+        {isUserLoggedIn && isOwner ? (
+          <button className="project-display__edit-button">
+            <img
+              className="project-display__edit-image"
+              src={editPic}
+              alt="Edit Project"
+            />
+          </button>
+        ) : (
+          <></>
+        )}
         <h2 className="project-display__title">{projectTitle}</h2>
         <button
           className={`project-display__button ${
@@ -72,7 +86,7 @@ const ProjectDisplay = ({
             </g>
           </svg>
         </button>
-        {isUserLoggedIn && (
+        {isUserLoggedIn && isOwner ? (
           <button
             className="project-display__trash-button"
             onClick={handleDeleteClick}
@@ -83,6 +97,8 @@ const ProjectDisplay = ({
               alt="Trash Can Picture"
             />
           </button>
+        ) : (
+          <></>
         )}
       </div>
       <div

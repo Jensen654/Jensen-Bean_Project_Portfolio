@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
 import "../blocks/App.css";
 import Header from "./Header.jsx";
-import { Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  useNavigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Home from "./Home.jsx";
 import Projects from "./Projects.jsx";
 import ContactMe from "./ContactMe.jsx";
 import PageDataContext from "../contexts/PageDataContext.js";
 import ProjectDataContext from "../contexts/ProjectDataContext.js";
 import UserDataContext from "../contexts/UserDataContext.js";
+import PublicDataContext from "../contexts/PublicDataContext.js";
 import Footer from "./Footer.jsx";
 import TechProjects from "./TechProjects.jsx";
 import OtherProjects from "./OtherProjects";
@@ -26,6 +31,8 @@ import {
   addProject,
   deleteProject,
   deleteUserProfile,
+  getPublicUser,
+  getPublicProjects,
 } from "../utils/api.js";
 import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
@@ -45,6 +52,16 @@ function App() {
   const [activeModal, setActiveModal] = useState("");
   const [currentUser, setCurrentUser] = useState({
     name: "",
+    userName: "",
+    avatar: "",
+    profession: "",
+    about: "",
+    resume: "",
+    id: "",
+  });
+  const [publicUser, setPublicUser] = useState({
+    name: "",
+    userName: "",
     avatar: "",
     profession: "",
     about: "",
@@ -54,19 +71,34 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [selectedProject, setSelectedProject] = useState("");
+  const [showContactMeInfo, setShowContactMeInfo] = useState(
+    publicUser.showContactMe
+  );
+  const [isOwner, setIsOwner] = useState(false);
+  const [publicUserName, setPublicUserName] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (location.pathname.includes("contactMe")) {
+      navigate(location.pathname.replace("contactMe", ""));
+    }
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
       confirmUser(jwt)
         .then((user) => {
           setIsUserLoggedIn(true);
+
           setCurrentUser({
             name: user.name,
+            userName: user.userName,
             avatar: user.avatar,
             profession: user.profession,
             about: user.about,
             resume: user.resumeUrl,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            showContactMe: user.showContactMe,
           });
         })
         .catch((err) => {
@@ -76,18 +108,44 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (currentUser.name.length > 0) fetchProjects(localStorage.getItem("jwt"));
-  }, [currentUser]);
-
-  const fetchProjects = async (userId) => {
-    try {
-      const projects = await getProjects(userId);
-
-      setProjects(projects);
-    } catch (error) {
-      console.error(error);
+    if (publicUserName?.length > 0 && publicUserName !== "undefined") {
+      getPublicUser({ userName: publicUserName })
+        .then((user) => {
+          setPublicUser({
+            name: user.name,
+            userName: user.userName,
+            avatar: user.avatar,
+            profession: user.profession,
+            about: user.about,
+            resume: user.resumeUrl,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            showContactMe: user.showContactMe,
+          });
+        })
+        .catch(() => console.error);
     }
-  };
+  }, [publicUserName]);
+
+  useEffect(() => {
+    if (publicUserName?.length > 0 && publicUserName !== "undefined")
+      fetchProjects();
+    setShowContactMeInfo(publicUser.showContactMe);
+    setIsOwner(publicUserName === currentUser.userName);
+  }, [currentUser, publicUser]);
+
+  useEffect(() => {
+    if (
+      window.location.pathname === "/" ||
+      window.location.pathname === `/${publicUserName}/`
+    ) {
+      setActiveRoute("home");
+    } else if (window.location.pathname.includes("/projects")) {
+      setActiveRoute("projects");
+    } else if (window.location.pathname === "/contactMe") {
+      setActiveRoute("contactMe");
+    }
+  });
 
   useEffect(() => {
     const subRoutes = projects.map((project) => project.type);
@@ -104,8 +162,18 @@ function App() {
     setActiveModal("");
   };
 
-  const handleSignUp = ({ name, email, password }) => {
-    signUpUser({ name, email, password })
+  const fetchProjects = async () => {
+    try {
+      const projects = await getPublicProjects({ userName: publicUserName });
+
+      setProjects(projects);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSignUp = ({ name, userName, email, password }) => {
+    signUpUser({ name, userName, email, password })
       .then(({ userData, token }) => {
         console.log(userData);
         localStorage.setItem("jwt", token);
@@ -113,11 +181,33 @@ function App() {
         setIsUserLoggedIn(true);
         setCurrentUser({
           name: userData.name,
+          userName: userData.userName,
           avatar: userData.avatar,
           profession: userData.profession,
           about: userData.about,
           resume: userData.resumeUrl,
+          email: userData.email,
+          phoneNumber: userData.phoneNumber,
+          showContactMe: userData.showContactMe,
         });
+        setPublicUser({
+          name: userData.name,
+          userName: userData.userName,
+          avatar: userData.avatar,
+          profession: userData.profession,
+          about: userData.about,
+          resume: userData.resumeUrl,
+          email: userData.email,
+          phoneNumber: userData.phoneNumber,
+          showContactMe: userData.showContactMe,
+        });
+        // let newPath;
+        // if (location.pathname.includes("undefined")) {
+        //   newPath = location.pathname.replace("undefined", userData.userName);
+        // } else {
+        //   newPath = location.pathname.concat(userData.userName);
+        // }
+        navigate(userData.userName);
       })
       .catch((err) => {
         console.error(err);
@@ -133,11 +223,36 @@ function App() {
 
         setCurrentUser({
           name: user.name,
+          userName: user.userName,
           avatar: user.avatar,
           profession: user.profession,
           about: user.about,
           resume: user.resumeUrl,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          showContactMe: user.showContactMe,
         });
+        setPublicUser({
+          name: user.name,
+          userName: user.userName,
+          avatar: user.avatar,
+          profession: user.profession,
+          about: user.about,
+          resume: user.resumeUrl,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          showContactMe: user.showContactMe,
+        });
+
+        let newPath;
+        if (location.pathname.includes("undefined")) {
+          newPath = location.pathname.replace("undefined", user.userName);
+        } else if (location.pathname.length < 2) {
+          newPath = location.pathname.concat(user.userName);
+        } else if (location.pathname.includes(user.userName)) {
+          newPath = location.pathname.replace(user.userName, user.userName);
+        }
+        navigate(newPath);
       })
       .catch(console.error);
   };
@@ -147,10 +262,13 @@ function App() {
     setIsUserLoggedIn(false);
     setCurrentUser({
       name: "",
+      userName: "",
       avatar: "",
       profession: "",
       about: "",
       resume: "",
+      email: "",
+      phoneNumber: "",
     });
     setProjects([]);
     setMenuOpen(false);
@@ -206,18 +324,47 @@ function App() {
     avatar,
     email,
     profession,
+    phoneNumber,
+    showContactMe,
     resume,
     about,
   }) => {
     const token = localStorage.getItem("jwt");
-    updateUserInfo({ name, avatar, email, profession, resume, about }, token)
-      .then((updatedUser) => {
+    updateUserInfo(
+      {
+        name,
+        avatar,
+        phoneNumber,
+        showContactMe,
+        email,
+        profession,
+        resume,
+        about,
+      },
+      token
+    )
+      .then(({ newDoc }) => {
         setCurrentUser({
-          name: updatedUser.newDoc.name,
-          avatar: updatedUser.newDoc.avatar,
-          profession: updatedUser.newDoc.profession,
-          about: updatedUser.newDoc.about,
-          resume: updatedUser.newDoc.resumeUrl,
+          name: newDoc.name,
+          avatar: newDoc.avatar,
+          profession: newDoc.profession,
+          about: newDoc.about,
+          resume: newDoc.resumeUrl,
+          phoneNumber: newDoc.phoneNumber,
+          showContactMe: newDoc.showContactMe,
+          email: newDoc.email,
+          userName: newDoc.userName,
+        });
+        setPublicUser({
+          name: newDoc.name,
+          avatar: newDoc.avatar,
+          profession: newDoc.profession,
+          about: newDoc.about,
+          resume: newDoc.resumeUrl,
+          phoneNumber: newDoc.phoneNumber,
+          showContactMe: newDoc.showContactMe,
+          email: newDoc.email,
+          userName: newDoc.userName,
         });
         handleCloseModal();
       })
@@ -269,11 +416,22 @@ function App() {
   };
 
   const handleDeleteProfile = async (userId) => {
-    await deleteUserProfile({ userId, token: localStorage.getItem("jwt") });
+    await deleteUserProfile({
+      userId,
+      token: localStorage.getItem("jwt"),
+    })
+      .then(({ deletedUser }) => {
+        handleCloseModal();
+        alert(`Successfully deleted user: ${deletedUser}`);
+        setCurrentUser({});
+      })
+      .catch(() => console.error);
   };
 
   return (
-    <UserDataContext.Provider value={{ currentUser, isUserLoggedIn }}>
+    <UserDataContext.Provider
+      value={{ currentUser, isUserLoggedIn, showContactMeInfo }}
+    >
       <ProjectDataContext.Provider
         value={{
           projects,
@@ -297,45 +455,71 @@ function App() {
             handleCloseModal,
           }}
         >
-          <div className="page">
-            <Header />
-            <Menu handleLogOut={handleLogOut} />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="projects" element={<Projects />}>
-                <Route path="tech-projects" element={<TechProjects />} />
+          <PublicDataContext.Provider
+            value={{ publicUserName, setPublicUserName, isOwner, publicUser }}
+          >
+            <div className="page">
+              <Header />
+              <Menu
+                handleLogOut={handleLogOut}
+                handleDeleteProfile={handleDeleteProfile}
+              />
+              <Routes>
+                <Route path="/:userName" element={<Home />} />
                 <Route
-                  path="performance-projects"
-                  element={<PerformanceProjects />}
-                />
-                <Route path="other-projects" element={<OtherProjects />} />
-              </Route>
-              <Route path="contactMe" element={<ContactMe />} />
-            </Routes>
-          </div>
-          <Footer />
-          <SignUpModal
-            handleCloseModal={handleCloseModal}
-            handleSubmit={handleSignUp}
-          />
-          <LoginModal
-            handleCloseModal={handleCloseModal}
-            handleSubmit={handleLogin}
-          />
-          <EditProfileModal
-            handleUploadAvatar={handleUploadAvatar}
-            handleSubmit={handleUpdateUserInfo}
-            handleCloseModal={handleCloseModal}
-          />
-          <AddProjectModal
-            handleCloseModal={handleCloseModal}
-            handleSubmit={handleProjectSubmit}
-            handleUploadProjectImage={handleUploadProjectImage}
-          />
-          <AreYouSureModal
-            isOpen={activeModal === "are-you-sure"}
-            handleCloseModal={handleCloseModal}
-          />
+                  path=":userName/projects"
+                  element={<Projects handleSubmit={handleDeleteProject} />}
+                >
+                  <Route path="tech-projects" element={<TechProjects />} />
+                  <Route
+                    path="performance-projects"
+                    element={<PerformanceProjects />}
+                  />
+                  <Route path="other-projects" element={<OtherProjects />} />
+                </Route>
+                {showContactMeInfo && (
+                  <Route path=":userName/contactMe" element={<ContactMe />} />
+                )}
+                <Route path="/" element={<Home />} />
+                {/*<Route
+                  path="projects"
+                  element={<Projects handleSubmit={handleDeleteProject} />}
+                >
+                  <Route path="tech-projects" element={<TechProjects />} />
+                  <Route
+                    path="performance-projects"
+                    element={<PerformanceProjects />}
+                  />
+                  <Route path="other-projects" element={<OtherProjects />} />
+                </Route>
+                {showContactMeInfo && (
+                  <Route path="contactMe" element={<ContactMe />} />
+                )} */}
+                {/* {!isUserLoggedIn && (
+                  <Route path="contactMe" element={<ContactMe />} />
+                )} */}
+              </Routes>
+              <Footer />
+              <SignUpModal
+                handleCloseModal={handleCloseModal}
+                handleSubmit={handleSignUp}
+              />
+              <LoginModal
+                handleCloseModal={handleCloseModal}
+                handleSubmit={handleLogin}
+              />
+              <EditProfileModal
+                handleUploadAvatar={handleUploadAvatar}
+                handleSubmit={handleUpdateUserInfo}
+                handleCloseModal={handleCloseModal}
+              />
+              <AddProjectModal
+                handleCloseModal={handleCloseModal}
+                handleSubmit={handleProjectSubmit}
+                handleUploadProjectImage={handleUploadProjectImage}
+              />
+            </div>
+          </PublicDataContext.Provider>
         </PageDataContext.Provider>
       </ProjectDataContext.Provider>
     </UserDataContext.Provider>

@@ -6,6 +6,7 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const { activeModal } = useContext(PageDataContext);
 
   const handleEmailChange = (e) => {
@@ -20,9 +21,13 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
     setName(e.target.value);
   };
 
+  const handleUserNameChange = (e) => {
+    setUserName(e.target.value);
+  };
+
   const handleSubmitForm = (e) => {
     e.preventDefault();
-    handleSubmit({ name, email, password });
+    handleSubmit({ name, userName, email, password });
   };
 
   return (
@@ -38,10 +43,24 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
         <input
           id="SignUpName"
           type="text"
-          name="username"
+          name="name"
           value={name}
           onChange={handleNameChange}
           className="modal__input"
+          placeholder="Name"
+          required
+        />
+      </label>
+      <label htmlFor="UserName" className="modal__label">
+        Username:
+        <input
+          id="UserName"
+          type="text"
+          name="UserName"
+          value={userName}
+          onChange={handleUserNameChange}
+          className="modal__input"
+          placeholder="Enter a Unique Username"
           required
         />
       </label>
@@ -54,6 +73,7 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
           value={email}
           onChange={handleEmailChange}
           className="modal__input"
+          placeholder="Email"
           required
         />
       </label>
@@ -66,6 +86,7 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
           value={password}
           onChange={handlePasswordChange}
           className="modal__input"
+          placeholder="Password"
           required
         />
       </label>

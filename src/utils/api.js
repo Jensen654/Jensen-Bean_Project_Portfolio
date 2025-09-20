@@ -1,3 +1,5 @@
+import { useParams } from "react-router-dom";
+
 const BASE_URL = "http://localhost:3001";
 
 const handleResponse = async (res) => {
@@ -32,13 +34,13 @@ const loginUser = ({ email, password }) => {
   }).then((res) => handleResponse(res));
 };
 
-const signUpUser = ({ name, email, password }) => {
+const signUpUser = ({ name, userName, email, password }) => {
   return fetch(`${BASE_URL}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({ name, userName, email, password }),
   }).then((res) => handleResponse(res));
 };
 
@@ -64,9 +66,20 @@ const editUser = (
 };
 
 const updateUserInfo = (
-  { name, avatar, email, profession, resume, about },
+  {
+    name,
+    avatar,
+    phoneNumber,
+    showContactMe,
+    email,
+    profession,
+    resume,
+    about,
+  },
   token
 ) => {
+  console.log(phoneNumber);
+
   return fetch(`${BASE_URL}/users/me`, {
     method: "PATCH",
     headers: {
@@ -77,6 +90,8 @@ const updateUserInfo = (
       name,
       avatar,
       email,
+      phoneNumber,
+      showContactMe,
       profession,
       resumeUrl: resume,
       about,
@@ -84,14 +99,14 @@ const updateUserInfo = (
   }).then((res) => handleResponse(res));
 };
 
-const deleteUserProfile = ({ userId, token }) => {
-  return fetch(BASE_URL, {
+const deleteUserProfile = ({ token }) => {
+  return fetch(`${BASE_URL}/users/me`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(userId),
+    // body: JSON.stringify(userId),
   }).then((res) => handleResponse(res));
 };
 
@@ -166,6 +181,20 @@ const deletePhoto = (deleteUrl) => {
   }).then((res) => handleResponse(res));
 };
 
+const getPublicUser = ({ userName }) => {
+  console.log(userName);
+
+  return fetch(`${BASE_URL}/${userName}`, {
+    method: "GET",
+  }).then((res) => handleResponse(res));
+};
+
+const getPublicProjects = ({ userName }) => {
+  return fetch(`${BASE_URL}/${userName}/projects`, {
+    method: "GET",
+  }).then((res) => handleResponse(res));
+};
+
 export {
   getProjects,
   confirmUser,
@@ -180,4 +209,6 @@ export {
   addProject,
   deleteProject,
   deleteUserProfile,
+  getPublicUser,
+  getPublicProjects,
 };
