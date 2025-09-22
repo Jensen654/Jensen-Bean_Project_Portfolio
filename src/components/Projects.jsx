@@ -9,11 +9,12 @@ import { DefaultProjects } from "../utils/constants";
 import AreYouSureModal from "./AreYouSureModal";
 import { useParams } from "react-router-dom";
 
-const Projects = ({ handleSubmit }) => {
+const Projects = () => {
   const { activeSubRoute, setActiveSubRoute, activeModal, setActiveModal } =
     useContext(PageDataContext);
   const { isUserLoggedIn } = useContext(UserDataContext);
-  const { projects, selectedProject } = useContext(ProjectDataContext);
+  const { projects, selectedProject, handleDeleteProject } =
+    useContext(ProjectDataContext);
   const { isOwner, setPublicUserName, publicUserName } =
     useContext(PublicDataContext);
   const { userName } = useParams();
@@ -37,9 +38,9 @@ const Projects = ({ handleSubmit }) => {
   };
 
   const submitDeleteProject = () => {
-    handleSubmit({
+    handleDeleteProject({
       projectId: selectedProject._id,
-      pictureUrl: selectedProject.avatar,
+      pictureUrl: selectedProject.image,
     });
   };
 

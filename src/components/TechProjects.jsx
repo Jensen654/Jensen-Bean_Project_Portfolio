@@ -7,7 +7,7 @@ const TechProjects = () => {
   const { projects } = useContext(ProjectDataContext);
 
   return (
-    <div className="tech-projects">
+    <div className="projects">
       <h1>Tech Projects</h1>
       <p>Here you can find a selection of my technology projects.</p>
       {projects.length > 0

@@ -27,6 +27,7 @@
   margin: 0 1%;
   gap: 10%;
   padding: 20px;
+  align-items: center;
 }
 
 .home__intro-container {
@@ -39,6 +40,8 @@
   color: #1d2b38;
   gap: 40px;
   padding: 40px 0;
+  max-width: 50%;
+  width: 100%;
 }
 
 .home__intro-text {
@@ -51,8 +54,7 @@
 }
 
 .home__intro-name {
-  align-self: start;
-  margin: 0 0 0 15%;
+  align-self: end;
 }
 
 .home__intro-title {
@@ -61,6 +63,9 @@
   color: #ffa928;
   border-bottom: 0.5px solid #1d2b38;
   font-size: 3.5rem;
+  max-width: 100%;
+  overflow: hidden;
+  z-index: 0;
 }
 
 .home__intro-image {
@@ -110,4 +115,22 @@
   max-width: 800px;
   align-self: center;
   text-align: justify;
+}
+
+@media screen and (max-width: 700px) {
+  .home__intro {
+    flex-direction: column;
+  }
+  .home__intro-container {
+    max-width: 100%;
+  }
+  .home__intro-title {
+    max-width: 98%;
+  }
+  .home__about {
+    flex-direction: column;
+  }
+  .home__about-title {
+    align-self: center;
+  }
 }

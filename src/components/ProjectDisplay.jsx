@@ -41,6 +41,12 @@ const ProjectDisplay = ({
     }));
   };
 
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    setActiveModal("edit-project");
+    handleProjectDisplayClick();
+  };
+
   const handleDeleteClick = (e) => {
     e.stopPropagation();
     setActiveModal("are-you-sure");
@@ -48,6 +54,8 @@ const ProjectDisplay = ({
   };
 
   const handleProjectDisplayClick = () => {
+    console.log(project);
+
     setSelectedProject(project);
   };
 
@@ -55,7 +63,10 @@ const ProjectDisplay = ({
     <section onClick={handleProjectDisplayClick} className="project-display">
       <div className="project-display__intro" onClick={handleDropDownClick}>
         {isUserLoggedIn && isOwner ? (
-          <button className="project-display__edit-button">
+          <button
+            onClick={handleEditClick}
+            className="project-display__edit-button"
+          >
             <img
               className="project-display__edit-image"
               src={editPic}

@@ -113,6 +113,9 @@ const EditProfileModal = ({
           value={name}
           onChange={handleNameChange}
           className="modal__input"
+          placeholder="Name"
+          minLength={2}
+          maxLength={20}
           required
         />
       </label>
@@ -125,6 +128,9 @@ const EditProfileModal = ({
           value={profession}
           onChange={handleProfessionChange}
           className="modal__input"
+          placeholder="Profession"
+          minLength={2}
+          maxLength={100}
           //   required
         />
       </label>
@@ -137,6 +143,8 @@ const EditProfileModal = ({
           value={phone}
           onChange={handlePhoneNumberChange}
           className="modal__input"
+          placeholder="1111111111"
+          maxLength={15}
           //   required
         />
       </label>
@@ -158,11 +166,12 @@ const EditProfileModal = ({
         Resume:
         <input
           id="EditResume"
-          type="text"
+          type="url"
           name="resume"
           value={resume}
           onChange={handleResumeChange}
           className="modal__input"
+          placeholder="Ex. GoogleDoc Share Link"
           //   required
         />
       </label>
@@ -187,7 +196,9 @@ const EditProfileModal = ({
           value={about}
           onChange={handleAboutChange}
           className="modal__input"
+          placeholder="Describe yourself"
           required
+          maxLength={3000}
         />
       </label>
     </ModalWithForm>

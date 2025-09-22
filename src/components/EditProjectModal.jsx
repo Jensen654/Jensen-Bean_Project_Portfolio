@@ -2,21 +2,36 @@ import ModalWithForm from "./ModalWithForm";
 import { useContext, useEffect, useState } from "react";
 import PageDataContext from "../contexts/PageDataContext";
 import UserDataContext from "../contexts/UserDataContext";
+import ProjectDataContext from "../contexts/ProjectDataContext";
 
-const EditProfileModal = ({
+const EditProjectModal = ({
   handleCloseModal,
   handleUploadProjectImage,
-  handleSubmit,
+  handleUpdateProject,
+  handleDeletePhoto,
 }) => {
   const { activeModal } = useContext(PageDataContext);
   const { currentUser } = useContext(UserDataContext);
+  const { selectedProject } = useContext(ProjectDataContext);
 
-  const [projectName, setprojectName] = useState("");
-  const [projectUrl, setProjectUrl] = useState("");
-  const [projectVideo, setProjectVideo] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
+  const [projectName, setprojectName] = useState(selectedProject.title ?? "");
+  const [projectUrl, setProjectUrl] = useState(selectedProject.url ?? "");
+  const [projectVideo, setProjectVideo] = useState(
+    selectedProject.videoUrl ?? ""
+  );
+  const [projectDescription, setProjectDescription] = useState(
+    selectedProject.description ?? ""
+  );
   const [projectImage, setProjectImage] = useState(null);
-  const [projectType, setProjectType] = useState("");
+  const [projectType, setProjectType] = useState(selectedProject.type ?? "");
+
+  useEffect(() => {
+    setprojectName(selectedProject?.title ?? "");
+    setProjectUrl(selectedProject?.url ?? "");
+    setProjectVideo(selectedProject?.videoUrl ?? "");
+    setProjectDescription(selectedProject?.description ?? "");
+    setProjectType(selectedProject?.type ?? "");
+  }, [selectedProject]);
 
   const handleProjectNameChange = (e) => {
     setprojectName(e.target.value);
@@ -46,13 +61,25 @@ const EditProfileModal = ({
     e.preventDefault();
     let returnImageUrl;
 
-    if (projectImage) {
-      await handleUploadProjectImage(projectImage).then((data) => {
-        returnImageUrl = data;
-      });
+    if (projectImage && selectedProject.image.length > 0) {
+      await handleDeletePhoto(selectedProject.image).catch((err) =>
+        console.error(err)
+      );
+      await handleUploadProjectImage(projectImage)
+        .then((data) => {
+          returnImageUrl = data;
+        })
+        .catch((err) => console.error(err));
+    } else if (projectImage) {
+      await handleUploadProjectImage(projectImage)
+        .then((data) => {
+          returnImageUrl = data;
+        })
+        .catch((err) => console.error(err));
     }
 
-    handleSubmit({
+    handleUpdateProject({
+      _id: selectedProject._id,
       type: projectType,
       title: projectName,
       description: projectDescription,
@@ -60,108 +87,101 @@ const EditProfileModal = ({
       videoUrl: projectVideo,
       image: returnImageUrl,
     });
-    setprojectName("");
-    setProjectUrl("");
-    setProjectVideo("");
-    setProjectDescription("");
-    setProjectImage(null);
-    setProjectType("");
   };
 
   return (
     <ModalWithForm
-      title="Add Project"
-      buttonText="Add Project"
-      isOpen={activeModal === "add-project"}
+      title="Update Project"
+      buttonText="Update Project"
+      isOpen={activeModal === "edit-project"}
       handleCloseClick={handleCloseModal}
       handleSubmit={handleSubmitForm}
     >
-      <label htmlFor="ProjectName" className="modal__label">
+      <label htmlFor="EditProjectName" className="modal__label">
         Project Name:
         <input
-          id="ProjectName"
+          id="EditProjectName"
           type="text"
-          name="ProjectName"
+          name="EditProjectName"
           value={projectName}
           onChange={handleProjectNameChange}
           className="modal__input"
-          placeholder="Project Name"
           required
           minLength={2}
           maxLength={100}
         />
       </label>
-      <label htmlFor="ProjectUrl" className="modal__label">
+      <label htmlFor="EditProjectUrl" className="modal__label">
         Project URL:
         <input
-          id="ProjectUrl"
+          id="EditProjectUrl"
           type="url"
-          name="Project URL"
+          name="EditProjectURL"
           value={projectUrl}
           onChange={handleProjectUrlChange}
           className="modal__input"
-          placeholder="Project URL"
+          placeholder="Optional"
           //   required
         />
       </label>
-      <label htmlFor="ProjectVideo" className="modal__label">
+      <label htmlFor="EditProjectVideo" className="modal__label">
         YouTube Video URL:
         <input
-          id="ProjectVideo"
+          id="EditProjectVideo"
           type="url"
-          name="ProjectVideo"
+          name="EditProjectVideo"
           value={projectVideo}
           onChange={handleProjectVideoChange}
           className="modal__input"
-          placeholder="Youtube URL"
+          placeholder="Optional"
           //   required
         />
       </label>
-      <fieldset className="modal__radio-buttons">
+      <fieldset className="modal__radio-buttons" required>
         <legend className="modal__legend">Select the Project Type:</legend>
-        <label htmlFor="tech" className="modal__label_type_radio">
+        <label htmlFor="editTech" className="modal__label_type_radio">
           Tech
           <input
             checked={projectType === "tech"}
-            id="tech"
+            id="editTech"
             type="radio"
-            name="projectType"
+            name="editProjectType"
             onChange={handleProjectTypeChange}
             className="modal__input"
-            required
+            // required
           />
         </label>
-        <label htmlFor="performance" className="modal__label_type_radio">
+        <label htmlFor="EditPerformance" className="modal__label_type_radio">
           Performance
           <input
             checked={projectType === "performance"}
-            id="performance"
+            id="EditPerformance"
             type="radio"
-            name="projectType"
+            name="editProjectType"
             onChange={handleProjectTypeChange}
             className="modal__input"
-            required
+            // required
           />
         </label>
-        <label htmlFor="other" className="modal__label_type_radio">
+        <label htmlFor="EditOther" className="modal__label_type_radio">
           Other
           <input
             checked={projectType === "other"}
-            id="other"
+            id="EditOther"
             type="radio"
-            name="projectType"
+            name="editProjectType"
             onChange={handleProjectTypeChange}
             className="modal__input"
-            required
+            // required
           />
         </label>
       </fieldset>
-      <label htmlFor="ProjectPicture" className="modal__label">
+      <label htmlFor="EditProjectPicture" className="modal__label">
         Project Picture:
         <input
-          id="ProjectPicture"
+          id="EditProjectPicture"
           type="file"
-          name="ProjectPicture"
+          name="EditProjectPicture"
           //   value={profession}
           onChange={handleProjectImageChange}
           className="modal__input modal__input_type_file"
@@ -169,16 +189,15 @@ const EditProfileModal = ({
           placeholder="Optional"
         />
       </label>
-      <label htmlFor="ProjectDescription" className="modal__label">
+      <label htmlFor="EditProjectDescription" className="modal__label">
         Project Description:
         <textarea
-          id="ProjectDescription"
+          id="EditProjectDescription"
           type="text"
           name="about"
           value={projectDescription}
           onChange={handleProjectDescriptionChange}
           className="modal__input"
-          placeholder="Project Description"
           required
           minLength={2}
           maxLength={1000}
@@ -189,4 +208,4 @@ const EditProfileModal = ({
   );
 };
 
-export default EditProfileModal;
+export default EditProjectModal;

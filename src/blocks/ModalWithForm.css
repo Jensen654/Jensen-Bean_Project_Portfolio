@@ -138,6 +138,7 @@
 .modal__input_type_file {
   border: 1px solid #1d2b38;
   margin: 0 auto;
+  max-width: 70%;
 }
 
 .modal__delete-content {
@@ -153,4 +154,15 @@
 .modal__delete-button {
   background-color: #ffa928;
   border-radius: 0;
+}
+
+@media screen and (max-width: 700px) {
+  .modal__content {
+    max-width: 98vw;
+  }
+  .modal__input {
+  }
+  .modal__form {
+    margin: 20px 10px;
+  }
 }

@@ -42,3 +42,10 @@
   margin-bottom: 10px;
   border-bottom: 1px solid;
 }
+
+@media screen and (max-width: 700px) {
+  .contact-me__section-item {
+    overflow: scroll;
+    max-width: 100%;
+  }
+}

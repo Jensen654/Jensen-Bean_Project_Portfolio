@@ -33,6 +33,7 @@ import {
   deleteUserProfile,
   getPublicUser,
   getPublicProjects,
+  updateProject,
 } from "../utils/api.js";
 import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
@@ -43,6 +44,8 @@ import Menu from "./Menu.jsx";
 import { acceptedImageTypes } from "../utils/constants.js";
 import PerformanceProjects from "./PerformanceProjects.jsx";
 import { DefaultProjects } from "../utils/constants.js";
+import EditProjectModal from "./EditProjectModal.jsx";
+import ErrorNotFound from "./ErrorNotFound.jsx";
 
 function App() {
   const [activeRoute, setActiveRoute] = useState("");
@@ -70,12 +73,13 @@ function App() {
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  const [selectedProject, setSelectedProject] = useState("");
+  const [selectedProject, setSelectedProject] = useState({});
   const [showContactMeInfo, setShowContactMeInfo] = useState(
     publicUser.showContactMe
   );
   const [isOwner, setIsOwner] = useState(false);
   const [publicUserName, setPublicUserName] = useState("");
+  const [errorNotFound, setErrorNotFound] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -111,6 +115,7 @@ function App() {
     if (publicUserName?.length > 0 && publicUserName !== "undefined") {
       getPublicUser({ userName: publicUserName })
         .then((user) => {
+          setErrorNotFound(false);
           setPublicUser({
             name: user.name,
             userName: user.userName,
@@ -123,7 +128,11 @@ function App() {
             showContactMe: user.showContactMe,
           });
         })
-        .catch(() => console.error);
+        .catch((err) => {
+          // if (err.message === "User not found") {
+          setErrorNotFound(true);
+          // }
+        });
     }
   }, [publicUserName]);
 
@@ -254,7 +263,9 @@ function App() {
         }
         navigate(newPath);
       })
-      .catch(console.error);
+      .catch((err) => {
+        alert(err.message);
+      });
   };
 
   const handleLogOut = () => {
@@ -315,7 +326,15 @@ function App() {
     );
 
     await deletePhoto(deleteUrl).catch((err) => {
-      console.error("Error deleting file:", err);
+      console.error("Error deleting file: ", err);
+    });
+  };
+
+  const handleDeleteProjectPhoto = async (projectImage) => {
+    const { deleteUrl } = await getDeleteUrl(encodeURIComponent(projectImage));
+
+    await deletePhoto(deleteUrl).catch((err) => {
+      console.error("Error deleting file: ", err);
     });
   };
 
@@ -391,18 +410,18 @@ function App() {
   };
 
   const handleDeleteProject = async ({ projectId, pictureUrl }) => {
+    console.log(pictureUrl);
+
     if (pictureUrl) {
-      const { deleteUrl } = await getDeleteUrl(pictureUrl);
+      const { deleteUrl } = await getDeleteUrl(encodeURIComponent(pictureUrl));
       await deletePhoto(deleteUrl)
-        .then((res) => {
-          if (res.ok) {
-            deleteProject({ token: localStorage.getItem("jwt"), projectId })
-              .then(() => {
-                setProjects(projects.filter((p) => p._id !== projectId));
-                handleCloseModal();
-              })
-              .catch(() => console.error);
-          }
+        .then(() => {
+          deleteProject({ token: localStorage.getItem("jwt"), projectId })
+            .then(() => {
+              setProjects(projects.filter((p) => p._id !== projectId));
+              handleCloseModal();
+            })
+            .catch(() => console.error);
         })
         .catch(() => console.error);
     } else {
@@ -416,16 +435,65 @@ function App() {
   };
 
   const handleDeleteProfile = async (userId) => {
-    await deleteUserProfile({
-      userId,
-      token: localStorage.getItem("jwt"),
-    })
-      .then(({ deletedUser }) => {
-        handleCloseModal();
-        alert(`Successfully deleted user: ${deletedUser}`);
-        setCurrentUser({});
+    const { deleteUrl } = await getDeleteUrl(
+      encodeURIComponent(currentUser.avatar)
+    );
+    if (currentUser.avatar.length > 0) {
+      await deletePhoto(deleteUrl)
+        .then(() => {
+          deleteUserProfile({
+            userId,
+            token: localStorage.getItem("jwt"),
+          })
+            .then(({ deletedUser }) => {
+              handleCloseModal();
+              alert(`Successfully deleted user: ${deletedUser}`);
+              setCurrentUser({});
+            })
+            .catch(() => console.error);
+        })
+        .catch(() => console.error("Error Deleting Image"));
+    } else {
+      await deleteUserProfile({
+        userId,
+        token: localStorage.getItem("jwt"),
       })
-      .catch(() => console.error);
+        .then(({ deletedUser }) => {
+          handleCloseModal();
+          alert(`Successfully deleted user: ${deletedUser}`);
+          setCurrentUser({});
+        })
+        .catch(() => console.error);
+    }
+  };
+
+  const handleUpdateProject = async ({
+    _id,
+    type,
+    title,
+    description,
+    url,
+    videoUrl,
+    image,
+  }) => {
+    const filteredProjects = projects.filter((p) => p._id !== _id);
+    await updateProject(
+      {
+        _id,
+        type,
+        title,
+        description,
+        url,
+        videoUrl,
+        image,
+      },
+      localStorage.getItem("jwt")
+    )
+      .then((project) => {
+        setProjects([...filteredProjects, project]);
+        handleCloseModal();
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -459,6 +527,7 @@ function App() {
             value={{ publicUserName, setPublicUserName, isOwner, publicUser }}
           >
             <div className="page">
+              {errorNotFound && <ErrorNotFound />}
               <Header />
               <Menu
                 handleLogOut={handleLogOut}
@@ -466,10 +535,7 @@ function App() {
               />
               <Routes>
                 <Route path="/:userName" element={<Home />} />
-                <Route
-                  path=":userName/projects"
-                  element={<Projects handleSubmit={handleDeleteProject} />}
-                >
+                <Route path=":userName/projects" element={<Projects />}>
                   <Route path="tech-projects" element={<TechProjects />} />
                   <Route
                     path="performance-projects"
@@ -517,6 +583,12 @@ function App() {
                 handleCloseModal={handleCloseModal}
                 handleSubmit={handleProjectSubmit}
                 handleUploadProjectImage={handleUploadProjectImage}
+              />
+              <EditProjectModal
+                handleCloseModal={handleCloseModal}
+                handleUpdateProject={handleUpdateProject}
+                handleUploadProjectImage={handleUploadProjectImage}
+                handleDeletePhoto={handleDeleteProjectPhoto}
               />
             </div>
           </PublicDataContext.Provider>

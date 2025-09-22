@@ -7,7 +7,7 @@ const PerformanceProjects = () => {
   const { projects } = useContext(ProjectDataContext);
 
   return (
-    <div className="performance-projects">
+    <div className="projects">
       <h1>Performance Projects</h1>
       <p>Here you can find a selection of my Performing Arts Projects.</p>
       {projects.length > 0

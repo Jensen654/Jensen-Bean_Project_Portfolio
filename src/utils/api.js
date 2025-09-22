@@ -3,15 +3,28 @@ import { useParams } from "react-router-dom";
 const BASE_URL = "http://localhost:3001";
 
 const handleResponse = async (res) => {
-  // console.log(res);
-
   if (res.ok) {
     const text = await res.text();
     return text ? JSON.parse(text) : null; // or null, depending on your use case
   } else {
-    return Promise.reject(`Error: ${res.status}`);
+    const errorText = await res.text();
+    let errorMessage;
+    try {
+      errorMessage = errorText ? JSON.parse(errorText) : `Error: ${res.status}`;
+    } catch {
+      errorMessage = errorText || `Error: ${res.status}`;
+    }
+    return Promise.reject(errorMessage);
   }
 };
+
+// const handleResponse = (res) => {
+//   if (res.ok) {
+//     const repo = res.json();
+//     return repo;
+//   }
+//   return Promise.reject(`Error: ${res.status}`);
+// };
 
 //User Stuff
 const confirmUser = (token) => {
@@ -106,7 +119,6 @@ const deleteUserProfile = ({ token }) => {
       "Content-Type": "application/json",
       authorization: `Bearer ${token}`,
     },
-    // body: JSON.stringify(userId),
   }).then((res) => handleResponse(res));
 };
 
@@ -146,6 +158,28 @@ const deleteProject = ({ token, projectId }) => {
   }).then((res) => handleResponse(res));
 };
 
+const updateProject = (
+  { _id, type, title, description, url, videoUrl, image },
+  token
+) => {
+  return fetch(`${BASE_URL}/projects`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      _id,
+      type,
+      title,
+      description,
+      url,
+      videoUrl,
+      image,
+    }),
+  }).then((res) => handleResponse(res));
+};
+
 //Amazon Web Service Stuff
 const getUploadUrl = () => {
   return fetch(`${BASE_URL}/users/upload-url`, {
@@ -182,8 +216,6 @@ const deletePhoto = (deleteUrl) => {
 };
 
 const getPublicUser = ({ userName }) => {
-  console.log(userName);
-
   return fetch(`${BASE_URL}/${userName}`, {
     method: "GET",
   }).then((res) => handleResponse(res));
@@ -211,4 +243,5 @@ export {
   deleteUserProfile,
   getPublicUser,
   getPublicProjects,
+  updateProject,
 };

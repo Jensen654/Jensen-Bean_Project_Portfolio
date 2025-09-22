@@ -40,7 +40,7 @@ const Header = () => {
       </p> */}
       <Link
         to={`${currentUser.userName}/`}
-        className={`header__link ${
+        className={`header__username header__link ${
           location.pathname.includes(currentUser.userName)
             ? "header__link-focus"
             : ""

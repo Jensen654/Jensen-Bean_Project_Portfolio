@@ -49,6 +49,8 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
           className="modal__input"
           placeholder="Name"
           required
+          minLength={2}
+          maxLength={20}
         />
       </label>
       <label htmlFor="UserName" className="modal__label">
@@ -62,6 +64,8 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
           className="modal__input"
           placeholder="Enter a Unique Username"
           required
+          minLength={2}
+          maxLength={30}
         />
       </label>
       <label htmlFor="SignUpEmail" className="modal__label">
