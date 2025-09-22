@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
 
 // const BASE_URL = "http://localhost:3001";
-const BASE_URL =
-  "https://jensen-bean-portfolio-project-backend-1rw5.onrender.com";
+const BASE_URL = "https://jensen-bean-portfolio-project-backend.onrender.com/";
 
 const handleResponse = async (res) => {
   if (res.ok) {
