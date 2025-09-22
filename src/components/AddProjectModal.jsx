@@ -2,6 +2,7 @@ import ModalWithForm from "./ModalWithForm";
 import { useContext, useEffect, useState } from "react";
 import PageDataContext from "../contexts/PageDataContext";
 import UserDataContext from "../contexts/UserDataContext";
+import ProjectDataContext from "../contexts/ProjectDataContext";
 
 const EditProfileModal = ({
   handleCloseModal,
@@ -10,6 +11,7 @@ const EditProfileModal = ({
 }) => {
   const { activeModal } = useContext(PageDataContext);
   const { currentUser } = useContext(UserDataContext);
+  const { projects } = useContext(ProjectDataContext);
 
   const [projectName, setprojectName] = useState("");
   const [projectUrl, setProjectUrl] = useState("");
@@ -45,6 +47,12 @@ const EditProfileModal = ({
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     let returnImageUrl;
+    if (projects.length >= 30) {
+      alert(
+        "You have reached the maximum number of projects (30). Please delete an existing project before adding a new one."
+      );
+      return;
+    }
 
     if (projectImage) {
       await handleUploadProjectImage(projectImage).then((data) => {
