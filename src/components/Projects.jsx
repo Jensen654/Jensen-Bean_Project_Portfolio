@@ -72,7 +72,7 @@ const Projects = () => {
                 }`}
                 to={`/${publicUserName}/projects/tech-projects`}
               >
-                Tech
+                Technology
               </Link>
             )
           : DefaultProjects.find((p) => p.type === "tech") && (
@@ -85,7 +85,7 @@ const Projects = () => {
                 }`}
                 to={`/${publicUserName}/projects/tech-projects`}
               >
-                Tech
+                Technology
               </Link>
             )}
         {projects.length > 0

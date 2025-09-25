@@ -5,7 +5,7 @@ import PageDataContext from "../contexts/PageDataContext";
 const LoginModal = ({ handleCloseModal, handleSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { activeModal } = useContext(PageDataContext);
+  const { activeModal, loading } = useContext(PageDataContext);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -23,7 +23,7 @@ const LoginModal = ({ handleCloseModal, handleSubmit }) => {
   return (
     <ModalWithForm
       title="Log In"
-      buttonText="Log In"
+      buttonText={loading ? "Logging In..." : "Log In"}
       isOpen={activeModal === "logIn"}
       handleCloseClick={handleCloseModal}
       handleSubmit={handleSubmitForm}

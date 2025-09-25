@@ -44,3 +44,10 @@
 .menu__item_delete {
   color: red;
 }
+
+@media screen and (max-width: 450px) {
+  .menu {
+    top: 10%;
+    right: calc(50% - 80px);
+  }
+}

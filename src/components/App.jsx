@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import "../blocks/App.css";
 import Header from "./Header.jsx";
 import {
@@ -80,6 +80,9 @@ function App() {
   const [isOwner, setIsOwner] = useState(false);
   const [publicUserName, setPublicUserName] = useState("");
   const [errorNotFound, setErrorNotFound] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [additionalAreYouSureText, setAdditionalAreYouSureText] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -182,6 +185,7 @@ function App() {
   };
 
   const handleSignUp = ({ name, userName, email, password }) => {
+    setLoading(true);
     signUpUser({ name, userName, email, password })
       .then(({ userData, token }) => {
         console.log(userData);
@@ -220,10 +224,13 @@ function App() {
       })
       .catch((err) => {
         console.error(err);
-      });
+        alert(err.message);
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleLogin = ({ email, password }) => {
+    setLoading(true);
     loginUser({ email, password })
       .then(({ token, user }) => {
         setIsUserLoggedIn(true);
@@ -265,7 +272,8 @@ function App() {
       })
       .catch((err) => {
         alert(err.message);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleLogOut = () => {
@@ -286,7 +294,8 @@ function App() {
   };
 
   const handleUploadAvatar = async (file) => {
-    if (currentUser.avatar.length > 0 || currentUser.avatar.length === 0) {
+    setLoadingImage(true);
+    if (currentUser?.avatar?.length > 0 || currentUser?.avatar?.length === 0) {
       handleDeletePhoto();
     }
     if (file?.size > 3 * 1024 * 1024) {
@@ -297,9 +306,11 @@ function App() {
     const { uploadUrl, key } = await getUploadUrl();
     const newAvatarUrl = `https://myimagedatabasejensenbean.s3.us-east-2.amazonaws.com/${key}`;
 
-    await uploadPhoto(file, uploadUrl).catch((err) => {
-      console.error("Error uploading file:", err);
-    });
+    await uploadPhoto(file, uploadUrl)
+      .catch((err) => {
+        console.error("Error uploading file:", err);
+      })
+      .finally(() => setLoadingImage(false));
 
     return newAvatarUrl;
   };
@@ -348,6 +359,7 @@ function App() {
     resume,
     about,
   }) => {
+    setLoading(true);
     const token = localStorage.getItem("jwt");
     updateUserInfo(
       {
@@ -387,7 +399,8 @@ function App() {
         });
         handleCloseModal();
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false));
   };
 
   const handleProjectSubmit = async ({
@@ -398,15 +411,16 @@ function App() {
     videoUrl,
     image,
   }) => {
+    setLoading(true);
     const token = localStorage.getItem("jwt");
-    await addProject(
-      { type, title, description, url, videoUrl, image },
-      token
-    ).then(({ project }) => {
-      handleCloseModal();
+    await addProject({ type, title, description, url, videoUrl, image }, token)
+      .then(({ project }) => {
+        handleCloseModal();
 
-      setProjects((prev) => [...prev, project]);
-    });
+        setProjects((prev) => [...prev, project]);
+      })
+      .catch((err) => alert(err.message))
+      .finally(() => setLoading(false));
   };
 
   const handleDeleteProject = async ({ projectId, pictureUrl }) => {
@@ -465,6 +479,7 @@ function App() {
         })
         .catch(() => console.error);
     }
+    setMenuOpen(false);
   };
 
   const handleUpdateProject = async ({
@@ -521,6 +536,9 @@ function App() {
             setMenuOpen,
             menuOpen,
             handleCloseModal,
+            loading,
+            loadingImage,
+            setAdditionalAreYouSureText,
           }}
         >
           <PublicDataContext.Provider
@@ -547,23 +565,6 @@ function App() {
                   <Route path=":userName/contactMe" element={<ContactMe />} />
                 )}
                 <Route path="/" element={<Home />} />
-                {/*<Route
-                  path="projects"
-                  element={<Projects handleSubmit={handleDeleteProject} />}
-                >
-                  <Route path="tech-projects" element={<TechProjects />} />
-                  <Route
-                    path="performance-projects"
-                    element={<PerformanceProjects />}
-                  />
-                  <Route path="other-projects" element={<OtherProjects />} />
-                </Route>
-                {showContactMeInfo && (
-                  <Route path="contactMe" element={<ContactMe />} />
-                )} */}
-                {/* {!isUserLoggedIn && (
-                  <Route path="contactMe" element={<ContactMe />} />
-                )} */}
               </Routes>
               <Footer />
               <SignUpModal
@@ -590,6 +591,7 @@ function App() {
                 handleUploadProjectImage={handleUploadProjectImage}
                 handleDeletePhoto={handleDeleteProjectPhoto}
               />
+              {/* <AreYouSureModal isOpen={activeModal === "are-you-sure"} /> */}
             </div>
           </PublicDataContext.Provider>
         </PageDataContext.Provider>

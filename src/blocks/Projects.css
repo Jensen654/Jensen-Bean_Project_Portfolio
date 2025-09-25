@@ -26,3 +26,10 @@
 .projects {
   padding: 10px;
 }
+
+@media screen and (max-width: 600px) {
+  .project__nav {
+    flex-direction: column;
+    align-items: center;
+  }
+}

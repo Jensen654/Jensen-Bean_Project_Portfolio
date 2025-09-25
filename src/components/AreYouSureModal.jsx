@@ -4,7 +4,7 @@ import ProjectDataContext from "../contexts/ProjectDataContext";
 import PageDataContext from "../contexts/PageDataContext";
 import UserDataContext from "../contexts/UserDataContext";
 
-const AreYouSureModal = ({ isOpen, handleSubmit }) => {
+const AreYouSureModal = ({ isOpen, handleSubmit, additionalText }) => {
   const { handleDeleteProject, selectedProject } =
     useContext(ProjectDataContext);
   const { currentUser } = useContext(UserDataContext);
@@ -42,6 +42,11 @@ const AreYouSureModal = ({ isOpen, handleSubmit }) => {
           type="button"
         ></button>
         <h2 className="modal__title">Are You Sure?</h2>
+        {additionalText ? (
+          <p className="modal__delete-text">{additionalText}</p>
+        ) : (
+          <></>
+        )}
         <div className="modal__delete-container">
           <button onClick={handleDeleteClick} className="modal__form_submit">
             Yes

@@ -139,4 +139,7 @@
   .home__intro-text {
     font-size: 2rem;
   }
+  .home__intro-image {
+    max-width: 100%;
+  }
 }

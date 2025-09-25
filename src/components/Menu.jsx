@@ -5,8 +5,13 @@ import UserDataContext from "../contexts/UserDataContext.js";
 import AreYouSureModal from "./AreYouSureModal.jsx";
 
 const Menu = ({ handleLogOut, handleDeleteProfile }) => {
-  const { menuOpen, setMenuOpen, activeModal, setActiveModal } =
-    useContext(PageDataContext);
+  const {
+    menuOpen,
+    setMenuOpen,
+    activeModal,
+    setActiveModal,
+    setAdditionalAreYouSureText,
+  } = useContext(PageDataContext);
   const { isUserLoggedIn, currentUser } = useContext(UserDataContext);
 
   const handleCloseMenu = () => {
@@ -28,7 +33,8 @@ const Menu = ({ handleLogOut, handleDeleteProfile }) => {
   };
 
   const handleDeleteClick = () => {
-    setActiveModal("are-you-sure");
+    setActiveModal("are-you-sure-delete");
+    // setMenuOpen(false);
   };
 
   return (
@@ -37,8 +43,9 @@ const Menu = ({ handleLogOut, handleDeleteProfile }) => {
       onClick={handleCloseMenu}
     >
       <AreYouSureModal
-        isOpen={activeModal === "are-you-sure"}
+        isOpen={activeModal === "are-you-sure-delete"}
         handleSubmit={handleDeleteProfile}
+        additionalText={`This will permanently delete the profile for ${currentUser.userName}. This action cannot be undone.`}
       />
       <div className="menu" onClick={stopPropagation}>
         {!isUserLoggedIn && (

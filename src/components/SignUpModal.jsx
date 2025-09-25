@@ -7,7 +7,7 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
-  const { activeModal } = useContext(PageDataContext);
+  const { activeModal, loading } = useContext(PageDataContext);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -33,7 +33,7 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
   return (
     <ModalWithForm
       title="Sign Up"
-      buttonText="Create Account"
+      buttonText={loading ? "Signing Up..." : "Create Account"}
       isOpen={activeModal === "signUp"}
       handleCloseClick={handleCloseModal}
       handleSubmit={handleSubmitForm}

@@ -8,7 +8,7 @@ const EditProfileModal = ({
   handleSubmit,
   handleUploadAvatar,
 }) => {
-  const { activeModal } = useContext(PageDataContext);
+  const { activeModal, loading } = useContext(PageDataContext);
   const { currentUser } = useContext(UserDataContext);
 
   const [email, setEmail] = useState(currentUser?.email ?? "");
@@ -99,7 +99,7 @@ const EditProfileModal = ({
   return (
     <ModalWithForm
       title="Edit Profile"
-      buttonText="Save Changes"
+      buttonText={loading ? "Saving..." : "Save Changes"}
       isOpen={activeModal === "editProfile"}
       handleCloseClick={handleCloseModal}
       handleSubmit={handleSubmitForm}

@@ -9,7 +9,7 @@ const EditProfileModal = ({
   handleUploadProjectImage,
   handleSubmit,
 }) => {
-  const { activeModal } = useContext(PageDataContext);
+  const { activeModal, loading } = useContext(PageDataContext);
   const { currentUser } = useContext(UserDataContext);
   const { projects } = useContext(ProjectDataContext);
 
@@ -79,7 +79,7 @@ const EditProfileModal = ({
   return (
     <ModalWithForm
       title="Add Project"
-      buttonText="Add Project"
+      buttonText={loading ? "Adding..." : "Add Project"}
       isOpen={activeModal === "add-project"}
       handleCloseClick={handleCloseModal}
       handleSubmit={handleSubmitForm}

@@ -10,7 +10,7 @@ const EditProjectModal = ({
   handleUpdateProject,
   handleDeletePhoto,
 }) => {
-  const { activeModal } = useContext(PageDataContext);
+  const { activeModal, loading } = useContext(PageDataContext);
   const { currentUser } = useContext(UserDataContext);
   const { selectedProject } = useContext(ProjectDataContext);
 
@@ -92,7 +92,7 @@ const EditProjectModal = ({
   return (
     <ModalWithForm
       title="Update Project"
-      buttonText="Update Project"
+      buttonText={loading ? "Updating..." : "Update Project"}
       isOpen={activeModal === "edit-project"}
       handleCloseClick={handleCloseModal}
       handleSubmit={handleSubmitForm}

@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 const Home = () => {
   const { currentUser, isUserLoggedIn } = useContext(UserDataContext);
-  const { setActiveModal } = useContext(PageDataContext);
+  const { setActiveModal, loadingImage } = useContext(PageDataContext);
   const { setPublicUserName, publicUser, isOwner } =
     useContext(PublicDataContext);
   const { userName } = useParams();
@@ -52,7 +52,9 @@ const Home = () => {
           )}
         </div>
         <img
-          className="home__intro-image"
+          className={`home__intro-image ${
+            loadingImage ? "loading-spinner" : ""
+          }`}
           // src="src/assets/JensenHeadshot.JPG"
           src={
             publicUser.avatar ||
