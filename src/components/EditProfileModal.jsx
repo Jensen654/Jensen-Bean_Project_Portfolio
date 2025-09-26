@@ -195,7 +195,7 @@ const EditProfileModal = ({
           name="about"
           value={about}
           onChange={handleAboutChange}
-          className="modal__input"
+          className="modal__input modal__input_type_textarea"
           placeholder="Describe yourself"
           required
           maxLength={3000}

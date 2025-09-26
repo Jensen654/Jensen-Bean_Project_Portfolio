@@ -9,8 +9,13 @@ import { useLocation } from "react-router-dom";
 
 const Header = () => {
   const location = useLocation();
-  const { activeRoute, setActiveRoute, activeSubRoute, setMenuOpen } =
-    useContext(PageDataContext);
+  const {
+    activeRoute,
+    setActiveRoute,
+    activeSubRoute,
+    setMenuOpen,
+    setActiveModal,
+  } = useContext(PageDataContext);
   const { currentUser, showContactMeInfo, isUserLoggedIn } =
     useContext(UserDataContext);
   const { publicUserName, publicUser } = useContext(PublicDataContext);
@@ -31,28 +36,32 @@ const Header = () => {
     setMenuOpen(true);
   };
 
+  const handleSignUpClick = () => {
+    setActiveModal("signUp");
+  };
+
   return (
     <header className="header">
-      {/* <p className="header__logo">
-        {typeof currentUser.name === "string" && currentUser.name.length > 0
-          ? currentUser.name
-          : "Your Mom"}
-      </p> */}
-      <Link
-        to={`${currentUser.userName}/`}
-        className={`header__username header__link ${
-          location.pathname.includes(currentUser.userName)
-            ? "header__link-focus"
-            : ""
-        }`}
-        onClick={handleHomeClick}
-      >
-        <p className="header__logo">
-          {typeof currentUser.name === "string" && currentUser.name.length > 0
-            ? currentUser.name
-            : "Your Mom"}
-        </p>
-      </Link>
+      {isUserLoggedIn ? (
+        <Link
+          to={`${currentUser.userName}/`}
+          className={`header__username header__link ${
+            location.pathname.includes(currentUser.userName)
+              ? "header__link-focus"
+              : ""
+          }`}
+          onClick={handleHomeClick}
+        >
+          <p className="header__logo">
+            {typeof currentUser.name === "string" && currentUser.name.length > 0
+              ? currentUser.name
+              : "Your Page"}
+          </p>
+        </Link>
+      ) : (
+        <button onClick={handleSignUpClick}>Create A Profile!</button>
+      )}
+
       <div className="header__links">
         <Link
           to={`${publicUserName}/`}
