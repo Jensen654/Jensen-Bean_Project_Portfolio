@@ -105,7 +105,7 @@ const EditProfileModal = ({
       handleSubmit={handleSubmitForm}
     >
       <label htmlFor="EditName" className="modal__label">
-        Name:
+        * Name:
         <input
           id="EditName"
           type="text"
@@ -177,6 +177,7 @@ const EditProfileModal = ({
       </label>
       <label htmlFor="EditAvatar" className="modal__label">
         Profile Picture:
+        <p className="modal__input_type_file-text">Max file size: 3mb</p>
         <input
           id="EditAvatar"
           type="file"
@@ -188,7 +189,7 @@ const EditProfileModal = ({
         />
       </label>
       <label htmlFor="EditAbout" className="modal__label">
-        About:
+        * About:
         <textarea
           id="EditAbout"
           type="text"

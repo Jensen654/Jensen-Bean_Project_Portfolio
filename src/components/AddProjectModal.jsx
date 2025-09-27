@@ -85,7 +85,7 @@ const EditProfileModal = ({
       handleSubmit={handleSubmitForm}
     >
       <label htmlFor="ProjectName" className="modal__label">
-        Project Name:
+        * Project Name:
         <input
           id="ProjectName"
           type="text"
@@ -126,7 +126,7 @@ const EditProfileModal = ({
         />
       </label>
       <fieldset className="modal__radio-buttons">
-        <legend className="modal__legend">Select the Project Type:</legend>
+        <legend className="modal__legend">* Select the Project Type:</legend>
         <label htmlFor="tech" className="modal__label_type_radio">
           Tech
           <input
@@ -166,6 +166,7 @@ const EditProfileModal = ({
       </fieldset>
       <label htmlFor="ProjectPicture" className="modal__label">
         Project Picture:
+        <p className="modal__input_type_file-text">Max file size: 3mb</p>
         <input
           id="ProjectPicture"
           type="file"
@@ -178,14 +179,14 @@ const EditProfileModal = ({
         />
       </label>
       <label htmlFor="ProjectDescription" className="modal__label">
-        Project Description:
+        * Project Description:
         <textarea
           id="ProjectDescription"
           type="text"
           name="about"
           value={projectDescription}
           onChange={handleProjectDescriptionChange}
-          className="modal__input"
+          className="modal__input modal__input_type_textarea"
           placeholder="Project Description"
           required
           minLength={2}

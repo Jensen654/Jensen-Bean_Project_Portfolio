@@ -16,7 +16,7 @@ const Header = () => {
     setMenuOpen,
     setActiveModal,
   } = useContext(PageDataContext);
-  const { currentUser, showContactMeInfo, isUserLoggedIn } =
+  const { currentUser, showContactMeInfo, isUserLoggedIn, isOwner } =
     useContext(UserDataContext);
   const { publicUserName, publicUser } = useContext(PublicDataContext);
 
@@ -53,9 +53,7 @@ const Header = () => {
           onClick={handleHomeClick}
         >
           <p className="header__logo">
-            {typeof currentUser.name === "string" && currentUser.name.length > 0
-              ? currentUser.name
-              : "Your Page"}
+            {isOwner ? "My Profile" : "Back to My Profile"}
           </p>
         </Link>
       ) : (

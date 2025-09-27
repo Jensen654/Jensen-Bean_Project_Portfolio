@@ -105,7 +105,7 @@ const Home = () => {
           easier. Now I'm on the search for a job where I can blend my
           creativity with problem solving!
         </p> */}
-        <p>
+        <p className="home__about-text">
           {publicUser.about.length > 0
             ? publicUser.about
             : "This here could be about your beautiful face (˘ε˘˶ )"}

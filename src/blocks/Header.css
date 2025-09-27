@@ -32,6 +32,10 @@
   cursor: pointer;
 }
 
+.header__link-create-button {
+  margin-bottom: 30px;
+}
+
 .header__username {
   margin-right: 30px;
 }

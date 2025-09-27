@@ -143,7 +143,7 @@ function App() {
     if (publicUserName?.length > 0 && publicUserName !== "undefined")
       fetchProjects();
     setShowContactMeInfo(publicUser.showContactMe);
-    setIsOwner(publicUserName === currentUser.userName);
+    setIsOwner(publicUserName == currentUser.userName);
   }, [currentUser, publicUser]);
 
   useEffect(() => {
@@ -513,7 +513,7 @@ function App() {
 
   return (
     <UserDataContext.Provider
-      value={{ currentUser, isUserLoggedIn, showContactMeInfo }}
+      value={{ currentUser, isUserLoggedIn, showContactMeInfo, isOwner }}
     >
       <ProjectDataContext.Provider
         value={{

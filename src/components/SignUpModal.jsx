@@ -39,11 +39,11 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
       handleSubmit={handleSubmitForm}
     >
       <label htmlFor="SignUpName" className="modal__label">
-        Name:
+        * Name:
         <input
           id="SignUpName"
           type="text"
-          name="name"
+          // name="name"
           value={name}
           onChange={handleNameChange}
           className="modal__input"
@@ -54,11 +54,11 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
         />
       </label>
       <label htmlFor="UserName" className="modal__label">
-        Username:
+        * Username:
         <input
           id="UserName"
           type="text"
-          name="UserName"
+          // name="username"
           value={userName}
           onChange={handleUserNameChange}
           className="modal__input"
@@ -69,7 +69,7 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
         />
       </label>
       <label htmlFor="SignUpEmail" className="modal__label">
-        Email:
+        * Email:
         <input
           id="SignUpEmail"
           type="email"
@@ -82,7 +82,7 @@ const SignUpModal = ({ handleCloseModal, handleSubmit }) => {
         />
       </label>
       <label htmlFor="SignUpPassword" className="modal__label">
-        Password:
+        * Password:
         <input
           id="SignUpPassword"
           type="password"

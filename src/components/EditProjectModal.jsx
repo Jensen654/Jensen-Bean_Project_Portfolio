@@ -98,7 +98,7 @@ const EditProjectModal = ({
       handleSubmit={handleSubmitForm}
     >
       <label htmlFor="EditProjectName" className="modal__label">
-        Project Name:
+        * Project Name:
         <input
           id="EditProjectName"
           type="text"
@@ -178,6 +178,7 @@ const EditProjectModal = ({
       </fieldset>
       <label htmlFor="EditProjectPicture" className="modal__label">
         Project Picture:
+        <p className="modal__input_type_file-text">Max file size: 3mb</p>
         <input
           id="EditProjectPicture"
           type="file"
@@ -190,14 +191,14 @@ const EditProjectModal = ({
         />
       </label>
       <label htmlFor="EditProjectDescription" className="modal__label">
-        Project Description:
+        * Project Description:
         <textarea
           id="EditProjectDescription"
           type="text"
           name="about"
           value={projectDescription}
           onChange={handleProjectDescriptionChange}
-          className="modal__input"
+          className="modal__input modal__input_type_textarea"
           required
           minLength={2}
           maxLength={1000}
