@@ -1,5 +1,5 @@
 import ModalWithForm from "./ModalWithForm";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import PageDataContext from "../contexts/PageDataContext";
 import UserDataContext from "../contexts/UserDataContext";
 import ProjectDataContext from "../contexts/ProjectDataContext";
@@ -10,7 +10,6 @@ const EditProfileModal = ({
   handleSubmit,
 }) => {
   const { activeModal, loading } = useContext(PageDataContext);
-  const { currentUser } = useContext(UserDataContext);
   const { projects } = useContext(ProjectDataContext);
 
   const [projectName, setprojectName] = useState("");
@@ -171,7 +170,6 @@ const EditProfileModal = ({
           id="ProjectPicture"
           type="file"
           name="ProjectPicture"
-          //   value={profession}
           onChange={handleProjectImageChange}
           className="modal__input modal__input_type_file"
           //   required
@@ -191,7 +189,6 @@ const EditProfileModal = ({
           required
           minLength={2}
           maxLength={1000}
-          // placeholder="Optional"
         />
       </label>
     </ModalWithForm>

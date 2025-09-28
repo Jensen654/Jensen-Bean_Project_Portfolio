@@ -18,7 +18,7 @@ const Header = () => {
   } = useContext(PageDataContext);
   const { currentUser, showContactMeInfo, isUserLoggedIn, isOwner } =
     useContext(UserDataContext);
-  const { publicUserName, publicUser } = useContext(PublicDataContext);
+  const { publicUserName } = useContext(PublicDataContext);
 
   const handleHomeClick = () => {
     setActiveRoute("home");
@@ -90,17 +90,6 @@ const Header = () => {
             <p className="header__link-text">Contact Me</p>
           </Link>
         )}
-        {/* {!isUserLoggedIn && (
-          <Link
-            to={`${publicUserName}/contactMe`}
-            className={`header__link ${
-              activeRoute === "contactMe" ? "header__link-focus" : ""
-            }`}
-            onClick={handleContactMeClick}
-          >
-            <p className="header__link-text">Contact Me</p>
-          </Link>
-        )} */}
         <button
           className={`header__link header__signup-button`}
           onClick={handleMenuClick}

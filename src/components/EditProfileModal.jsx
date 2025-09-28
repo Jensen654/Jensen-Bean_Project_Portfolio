@@ -22,16 +22,6 @@ const EditProfileModal = ({
     currentUser?.showContactMe ?? false
   );
 
-  // useEffect(() => {
-  //   setEmail(currentUser.email);
-  //   setName(currentUser.name);
-  //   setProfession(currentUser.profession);
-  //   setResume(currentUser.resume);
-  //   setAbout(currentUser.about);
-  //   setPhone(currentUser.phoneNumber);
-  //   setShowContactMe(currentUser.showContactMe);
-  // }, [currentUser]);
-
   useEffect(() => {
     if (currentUser) {
       setEmail(currentUser.email ?? "");
@@ -68,7 +58,7 @@ const EditProfileModal = ({
     setPhone(e.target.value);
   };
 
-  const handleCheckBoxClick = (e) => {
+  const handleCheckBoxClick = () => {
     setShowContactMe(!showContactMe);
     console.log(showContactMe);
   };
@@ -155,8 +145,6 @@ const EditProfileModal = ({
           id="ShowContactMe"
           type="checkbox"
           name="ShowContactMe"
-          // value={isChecked}
-          // onClick={handleCheckBoxClick}
           onChange={handleCheckBoxClick}
           className="modal__input"
           //   required
@@ -182,7 +170,6 @@ const EditProfileModal = ({
           id="EditAvatar"
           type="file"
           name="EditAvatar"
-          //   value={resume}
           onChange={handleAvatarChange}
           className="modal__input modal__input_type_file"
           //   required

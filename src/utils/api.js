@@ -1,7 +1,3 @@
-import { useParams } from "react-router-dom";
-
-// const BASE_URL = "http://localhost:3001";
-// const BASE_URL = "https://jensen-bean-portfolio-project-backend.onrender.com";
 const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "https://jensen-bean-portfolio-project-backend.onrender.com"
@@ -10,7 +6,7 @@ const BASE_URL =
 const handleResponse = async (res) => {
   if (res.ok) {
     const text = await res.text();
-    return text ? JSON.parse(text) : null; // or null, depending on your use case
+    return text ? JSON.parse(text) : null;
   } else {
     const errorText = await res.text();
     let errorMessage;
@@ -22,14 +18,6 @@ const handleResponse = async (res) => {
     return Promise.reject(errorMessage);
   }
 };
-
-// const handleResponse = (res) => {
-//   if (res.ok) {
-//     const repo = res.json();
-//     return repo;
-//   }
-//   return Promise.reject(`Error: ${res.status}`);
-// };
 
 //User Stuff
 const confirmUser = (token) => {

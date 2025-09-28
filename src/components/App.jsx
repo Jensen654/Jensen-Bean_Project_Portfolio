@@ -1,13 +1,7 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import "../blocks/App.css";
 import Header from "./Header.jsx";
-import {
-  Navigate,
-  useNavigate,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { useNavigate, Route, Routes, useLocation } from "react-router-dom";
 import Home from "./Home.jsx";
 import Projects from "./Projects.jsx";
 import ContactMe from "./ContactMe.jsx";
@@ -19,7 +13,6 @@ import Footer from "./Footer.jsx";
 import TechProjects from "./TechProjects.jsx";
 import OtherProjects from "./OtherProjects";
 import {
-  getProjects,
   confirmUser,
   signUpUser,
   loginUser,
@@ -39,9 +32,7 @@ import SignUpModal from "./SignUpModal.jsx";
 import LoginModal from "./LoginModal.jsx";
 import EditProfileModal from "./EditProfileModal.jsx";
 import AddProjectModal from "./AddProjectModal.jsx";
-import AreYouSureModal from "./AreYouSureModal.jsx";
 import Menu from "./Menu.jsx";
-import { acceptedImageTypes } from "../utils/constants.js";
 import PerformanceProjects from "./PerformanceProjects.jsx";
 import { DefaultProjects } from "../utils/constants.js";
 import EditProjectModal from "./EditProjectModal.jsx";
@@ -82,7 +73,6 @@ function App() {
   const [errorNotFound, setErrorNotFound] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
-  const [additionalAreYouSureText, setAdditionalAreYouSureText] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -131,7 +121,7 @@ function App() {
             showContactMe: user.showContactMe,
           });
         })
-        .catch((err) => {
+        .catch(() => {
           // if (err.message === "User not found") {
           setErrorNotFound(true);
           // }
@@ -214,12 +204,6 @@ function App() {
           phoneNumber: userData.phoneNumber,
           showContactMe: userData.showContactMe,
         });
-        // let newPath;
-        // if (location.pathname.includes("undefined")) {
-        //   newPath = location.pathname.replace("undefined", userData.userName);
-        // } else {
-        //   newPath = location.pathname.concat(userData.userName);
-        // }
         navigate(userData.userName);
       })
       .catch((err) => {
@@ -538,7 +522,6 @@ function App() {
             handleCloseModal,
             loading,
             loadingImage,
-            setAdditionalAreYouSureText,
           }}
         >
           <PublicDataContext.Provider
@@ -591,7 +574,6 @@ function App() {
                 handleUploadProjectImage={handleUploadProjectImage}
                 handleDeletePhoto={handleDeleteProjectPhoto}
               />
-              {/* <AreYouSureModal isOpen={activeModal === "are-you-sure"} /> */}
             </div>
           </PublicDataContext.Provider>
         </PageDataContext.Provider>

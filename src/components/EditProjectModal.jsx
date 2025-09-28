@@ -11,7 +11,6 @@ const EditProjectModal = ({
   handleDeletePhoto,
 }) => {
   const { activeModal, loading } = useContext(PageDataContext);
-  const { currentUser } = useContext(UserDataContext);
   const { selectedProject } = useContext(ProjectDataContext);
 
   const [projectName, setprojectName] = useState(selectedProject.title ?? "");

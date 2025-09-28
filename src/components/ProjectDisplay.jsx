@@ -21,7 +21,7 @@ const ProjectDisplay = ({
   const { isOwner } = useContext(PublicDataContext);
 
   function getYouTubeEmbedUrl(url) {
-    if (typeof url !== "string") return null; // <-- Add this line
+    if (typeof url !== "string") return null;
     // Handles URLs like https://youtu.be/VIDEO_ID and https://www.youtube.com/watch?v=VIDEO_ID
     const match = url.match(
       /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w-]{11})/
@@ -142,13 +142,6 @@ const ProjectDisplay = ({
             alt={project.title}
           />
         ) : null}
-        {/* {project.videoUrl ? (
-          <video
-            className="project-display__content"
-            src={project.videoUrl}
-            controls
-          />
-        ) : null} */}
         {embedUrl ? (
           <iframe
             src={embedUrl}

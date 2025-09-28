@@ -5,13 +5,8 @@ import UserDataContext from "../contexts/UserDataContext.js";
 import AreYouSureModal from "./AreYouSureModal.jsx";
 
 const Menu = ({ handleLogOut, handleDeleteProfile }) => {
-  const {
-    menuOpen,
-    setMenuOpen,
-    activeModal,
-    setActiveModal,
-    setAdditionalAreYouSureText,
-  } = useContext(PageDataContext);
+  const { menuOpen, setMenuOpen, activeModal, setActiveModal } =
+    useContext(PageDataContext);
   const { isUserLoggedIn, currentUser } = useContext(UserDataContext);
 
   const handleCloseMenu = () => {
